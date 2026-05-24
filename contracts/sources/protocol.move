@@ -123,6 +123,16 @@ public fun borrow_uid_mut(agent: &mut ANIMA): &mut UID {
     &mut agent.id
 }
 
+/// Grants read-only access to the internal UID
+public fun borrow_uid(agent: &ANIMA): &UID {
+    &agent.id
+}
+
+/// Verifies that the given OwnerCap belongs to this ANIMA
+public fun check_owner_cap(agent: &ANIMA, cap: &OwnerCap) {
+    assert!(object::uid_to_inner(&agent.id) == cap.anima_id, EInvalidGuardianCertificate);
+}
+
 /// Package-internal utility for structural balance deposits
 public(package) fun mutate_balance(agent: &mut ANIMA, funding: Balance<SUI>) {
     balance::join(&mut agent.wallet_balance, funding);
