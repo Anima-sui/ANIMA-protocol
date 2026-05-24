@@ -1,0 +1,11 @@
+[package]
+name = "anima"
+edition = "2024.beta"
+version = "1.0.0"
+
+[dependencies]
+# Left empty intentionally. The Sui CLI automatically fetches the 
+# native Sui Framework and Move Standard Library based on your active environment.
+
+[addresses]
+anima = "0x0"
