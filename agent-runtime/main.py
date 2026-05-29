@@ -1,9 +1,3 @@
-"""
-ANIMA Agent Runtime - Main Entry Point
-
-This module bootstraps the agent runtime and coordinates all components.
-"""
-
 import asyncio
 import logging
 import os
@@ -25,7 +19,7 @@ logger = logging.getLogger(__name__)
 async def main():
     """Main runtime entry point."""
     logger.info("="*60)
-    logger.info("🚀 ANIMA AGENT RUNTIME - PHASE 1")
+    logger.info("ANIMA AGENT RUNTIME - PHASE 1")
     logger.info("="*60)
     
     # Initialize components
