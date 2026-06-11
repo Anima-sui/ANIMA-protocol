@@ -90,8 +90,6 @@ explorer/
 │   ├── app/
 │   │   ├── layout.tsx              # Root layout, wallet provider wrapper
 │   │   ├── page.tsx                # Home — search + global stats
-│   │   ├── mint/
-│   │   │   └── page.tsx            # Mint a new ANIMA agent
 │   │   └── agent/
 │   │       └── [id]/
 │   │           └── page.tsx        # Agent profile page
@@ -103,13 +101,10 @@ explorer/
 │   │   │   ├── SearchBar.tsx       # Search by agent address
 │   │   │   ├── ProtocolStats.tsx   # Global TVL, total agents, total actions
 │   │   │   └── AgentGrid.tsx       # Grid of recently minted agents
-│   │   ├── mint/
-│   │   │   ├── MintForm.tsx        # Agent name + skill params input
-│   │   │   └── MintSuccess.tsx     # Post-mint confirmation with object ID
 │   │   └── agent/
 │   │       ├── AgentHeader.tsx     # Name, status badge, object ID
 │   │       ├── IdentityPanel.tsx   # Owner address, mint date, reputation
-│   │       ├── WalletPanel.tsx     # Balance, total volume, fund button
+│   │       ├── WalletPanel.tsx     # Balance, total volume (read-only)
 │   │       ├── SkillRegistry.tsx   # Dynamic skill list with Walrus blob IDs
 │   │       ├── ActionFeed.tsx      # Live paginated action history
 │   │       ├── KillSwitch.tsx      # Emergency kill switch button + modal
@@ -199,56 +194,24 @@ Build these components with **mocked data first**, wire to real data on Day 3:
 
 ---
 
-### Day 2 — Mint Page + Agent Profile Layout
+### Day 2 — Routing & Layout Scaffolding + Agent Profile Mockups
 
-> Goal: Mint flow works end-to-end. Agent profile page renders all sections with mocked data.
+> Goal: Routing works from search lookup. Agent profile page renders all sections with mocked data.
 
-#### Morning — Mint Page (3–4 hours)
+#### Morning — Scaffolding & Routing (3–4 hours)
 
-**`app/mint/page.tsx`** — the mint flow:
+Set up dynamic routing for agent lookup `/agent/[id]`. Build helper functions to route searches and validate Sui address format before navigating.
 
-```typescript
-// Rough structure — implement the logic yourself
-const { mutate: signAndExecute } = useSignAndExecuteTransaction();
-
-function handleMint() {
-  const tx = new Transaction();
-  tx.moveCall({
-    target: `${PACKAGE_ID}::anima::mint_anima`,
-    arguments: [tx.pure.string(agentName)],
-  });
-  signAndExecute(
-    { transaction: tx },
-    {
-      onSuccess: (result) => {
-        // Extract ANIMA object ID from result
-        // Redirect to /agent/[newObjectId]
-      },
-    },
-  );
-}
-```
-
-**`MintForm.tsx`** fields:
-
-- Agent name (text input)
-- Initial skill name (text input)
-- Walrus blob ID for skill (text input — Ezekiel provides this)
-- Submit button — disabled until wallet is connected
-
-**`MintSuccess.tsx`:**
-
-- Shows new ANIMA object ID
-- Shows OwnerCap object ID
-- "View your agent →" link to `/agent/[id]`
-- "Copy agent address" button
+**`SearchBar.tsx`** updates:
+- Check if search input matches standard 64-character hex format (`0x...`).
+- Route successfully to `/agent/[id]`.
+- Implement responsive design for mobile lookups.
 
 #### Afternoon — Agent Profile Layout (3–4 hours)
 
-Build all agent profile components with **static mocked data**. Focus on layout and structure, not real data yet.
+Build all agent profile components with **static mocked data**. Focus on layout, aesthetics, and structure, not real data yet.
 
 **`AgentHeader.tsx`:**
-
 ```
 ANIMA: "Atlas"                    ● ACTIVE
 0x1a2b3c...4d5e  [Copy] [View on Sui Explorer ↗]
@@ -256,37 +219,32 @@ Minted: May 27, 2026  |  Rep Score: 142
 ```
 
 **`IdentityPanel.tsx`:**
-
 - Owner address → links to `https://suiexplorer.com/address/[ownerAddress]?network=testnet`
 - OwnerCap ID → links to Sui explorer
 - Mint date
-- Reputation score
+- Reputation score (rendered with simple numerical component or micro-loading bar visualization)
 
 **`WalletPanel.tsx`:**
-
-- Current balance in SUI (converted from MIST)
-- Total lifetime volume
-- "Fund Agent" button → opens a simple modal to send SUI to agent wallet address
+- Current balance in SUI (explicitly displaying numeric SUI balance, polled every 10 seconds on real hook)
+- Total lifetime volume (read-only)
+- No interactive funding actions (as funding is handled by the Product Interface).
 
 **`SkillRegistry.tsx`:**
-
 - List of skills, each showing:
   - Skill name
   - Walrus blob ID (truncated, with copy button)
-  - "View on Walrus ↗" external link
+  - "View on Walrus ↗" external link (linking out to retrieve the JSON config blob)
 
 **`ActionFeed.tsx`:**
-
 - Table/list of actions, newest first
 - Each row: tx type badge, amount, protocol, timestamp, tx digest linked to Sui explorer
 - Empty state: "No actions yet — agent is monitoring"
 
 **End of Day 2 checkpoint:**
-
-- [ ] Mint form renders and wallet signs the transaction
-- [ ] After mint, user is redirected to the agent profile page
-- [ ] All agent profile sections render with mocked data
-- [ ] All Sui explorer links open correctly
+- [ ] Search input validates and routes to `/agent/[id]`
+- [ ] Static agent profile dashboard renders all sections correctly on different screen sizes
+- [ ] SUI balance display placeholder is prominent on WalletPanel
+- [ ] All Sui explorer links open correctly in new tabs
 
 ---
 
@@ -441,35 +399,31 @@ Trigger a test transaction on testnet and confirm the event appears in Supabase.
 
 ### Day 4 — Kill Switch + Global Stats + Polish
 
-> Goal: Kill switch works live. Home page shows real protocol stats. UI looks intentional.
+> Goal: Kill switch works live for authorized guardians. Home page shows real protocol stats. UI looks intentional.
 
 #### Morning — Kill Switch (2–3 hours)
 
-**`KillSwitch.tsx`** — only render if connected wallet holds the OwnerCap:
+**`KillSwitch.tsx`** — only render button and confirmation UI if the connected wallet context holds the OwnerCap corresponding to the agent's ID:
 
 ```typescript
-// Check: does connectedWallet own an object with type `${PACKAGE_ID}::anima::OwnerCap`
+// Check: does connectedWallet own an object with type `${PACKAGE_ID}::protocol::OwnerCap`
 // and anima_id matching the current agent?
 // Use suiClient.getOwnedObjects() filtered by type
 
-// If yes → show the kill switch button
-// If no → render nothing (or a locked state)
+// If yes → show the active "⚡ TRIGGER EMERGENCY KILL" button
+// If no → hide the button or display a locked/read-only indicator
 ```
 
 **Kill switch confirmation modal:**
-
 - Warning message: "This will permanently pause your agent and return all funds to your wallet."
 - Two buttons: Cancel / Confirm & Sign
 - On confirm → build and sign `trigger_emergency_kill` transaction
 - On success → agent status updates to PAUSED, balance shows 0
 
-#### Late Morning — Fund Agent Modal (1 hour)
-
-Simple modal on `WalletPanel.tsx`:
-
-- Input: amount in SUI
-- On submit → `tx.transferObjects` to agent wallet address
-- On success → balance updates on next poll
+#### Late Morning — UI Refinements (1 hour)
+- Refine loading skeletons for the lookup page and agent profile.
+- Verify polling tick intervals for `useAgent.ts` (polling every 10 seconds for the numeric SUI balance).
+- Tweak the status badge animation (pulsing green dot for `ACTIVE`, static red dot for `PAUSED`).
 
 #### Afternoon — Global Stats + Home Page Real Data (2 hours)
 
@@ -554,22 +508,19 @@ Confirm the indexer is running on Railway and events are still flowing into Supa
 
 #### Afternoon — Full Demo Run (3 hours)
 
-Run the complete demo loop three times from scratch:
+Run the complete demo loop three times from scratch using a pre-minted agent:
 
 ```
 1. Open explorer on live Vercel URL
-2. Connect wallet (fresh wallet with testnet SUI)
-3. Go to /mint
-4. Fill in agent name and skill
-5. Click Mint → sign transaction
-6. Confirm redirect to /agent/[id]
-7. Fund agent wallet via Fund modal
-8. Wait for Ezekiel's agent to boot and trigger an action
-9. Watch ActionFeed update live
-10. Click Kill Switch → confirm modal → sign
-11. Confirm agent shows PAUSED, balance shows 0
-12. Search for the agent from home page by object ID
-13. Confirm global stats updated
+2. Search for the pre-minted agent by object ID
+3. Verify name, SUI balance, status, and active skills display correctly
+4. Wait for Ezekiel's agent runtime to execute a swap/transfer action
+5. Watch ActionFeed update live with transaction details (polled/ingested via backend indexer)
+6. Connect wallet holding the OwnerCap for the agent
+7. Verify that the "⚡ TRIGGER EMERGENCY KILL" button becomes active
+8. Click Kill Switch → confirm modal → sign the transaction
+9. Confirm agent status changes to PAUSED and numeric balance updates to 0 SUI
+10. Confirm global stats updated on home page
 ```
 
 Fix any bugs that surface during the runs.
@@ -578,9 +529,9 @@ Fix any bugs that surface during the runs.
 
 - [ ] Live Vercel URL loads in under 3 seconds
 - [ ] Wallet connects on first try
-- [ ] Mint transaction confirms within 5 seconds on testnet
-- [ ] Agent profile loads real data within 2 seconds
-- [ ] Kill switch works end-to-end
+- [ ] Search input validates and routes correctly
+- [ ] Agent profile loads real data (including SUI balance) within 2 seconds
+- [ ] Kill switch works end-to-end for the OwnerCap holder
 - [ ] ActionFeed shows events within 10 seconds of block confirmation
 - [ ] All Sui Explorer links open correctly
 - [ ] No console errors in production build
