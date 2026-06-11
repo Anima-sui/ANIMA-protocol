@@ -10,8 +10,8 @@ const Hero = () => {
     <section className="py-12">
       <div className="relative z-10">
         {/* Title */}
-        <h1 className="mt-12 text-center text-4xl font-bold max-sm:mt-8 max-sm:text-2xl">
-          Explore Sui Blockchain
+        <h1 className="mt-12 text-center text-4xl max-sm:mt-8 max-sm:text-2xl">
+          Explore the Agentic Sui Blockchain
         </h1>
 
         {/* Search Bar */}
@@ -41,9 +41,9 @@ const Hero = () => {
         {/* Stats Grid */}
         <ul className="grid gap-4 whitespace-nowrap max-xl:grid-cols-2 max-sm:mt-16 max-sm:grid-cols-1 mt-20 grid-cols-3 max-md:mt-24 px-4">
           {/* Card 1: Total Txn Block */}
-          <li className="rounded-2xl bg-body shadow-#1 dark:border overflow-hidden">
+          <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full border p-2.5">
+              <div className="mr-3 rounded-full p-2.5">
                 <Box />
               </div>
               <div>
@@ -53,7 +53,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="m-2 rounded-lg border bg-secondary p-3 text-sm">
+            <div className="m-2 rounded-lg p-3 text-sm">
               <p className="text-secondary">Total Supply</p>
               <div className="mt-1 font-medium">10B</div>
               <div
@@ -80,9 +80,9 @@ const Hero = () => {
           </li>
 
           {/* Card 2: Total Stake */}
-          <li className="rounded-2xl bg-body shadow-#1 dark:border overflow-hidden">
+          <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full border p-2.5">
+              <div className="mr-3 rounded-full p-2.5">
                 <Coins />
               </div>
               <div>
@@ -101,7 +101,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="m-2 rounded-lg border bg-secondary p-3 text-sm">
+            <div className="m-2 rounded-lg *: p-3 text-sm">
               <p className="text-secondary">Last Epoch Rewards</p>
               <div className="mt-1 font-medium">
                 <span className="overflow-hidden whitespace-nowrap leading-none inline">
@@ -136,9 +136,9 @@ const Hero = () => {
           </li>
 
           {/* Card 3: Epoch */}
-          <li className="rounded-2xl bg-body shadow-#1 dark:border overflow-hidden">
+          <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full border p-2.5">
+              <div className="mr-3 rounded-full p-2.5">
                 <Hourglass />
               </div>
               <div>
@@ -163,7 +163,7 @@ const Hero = () => {
                 </div>
               </div>
             </div>
-            <div className="m-2 rounded-lg border bg-secondary p-3 text-sm">
+            <div className="m-2 rounded-lg p-3 text-sm">
               <div className="flex justify-between">
                 <div>
                   <p className="text-secondary">Started at</p>
