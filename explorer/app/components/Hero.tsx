@@ -23,15 +23,15 @@ const Hero = () => {
                 placeholder="Search by Account, Package, Object, Transaction, SuiNS"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-full bg-body p-4 text-sm shadow-#1 backdrop-blur-sm placeholder:font-normal placeholder:text-secondary h-[56px] pr-[128px] dark:border dark:font-[400] dark:backdrop-blur-[5px] focus:outline-none focus:ring-2 focus:ring-brand"
+                className="w-full rounded-full bg-foreground p-6 text-sm shadow-#1 backdrop-blur-sm placeholder:font-normal text-background h-[56px] pr-[128px] focus:outline-none focus:ring-2 focus:ring-brand"
               />
               <span
-                className="absolute flex h-7 w-7 items-center justify-center rounded-md bg-brand-secondary text-brand max-sm:hidden top-1/2 -translate-y-1/2 transform"
-                style={{ right: "90px" }}
+                className="absolute flex h-7 w-7 items-center justify-center rounded-md bg-[#0241ff]/40 primary-text max-sm:hidden top-1/2 -translate-y-1/2 transform"
+                style={{ right: "100px" }}
               >
                 /
               </span>
-              <button className="absolute right-1 top-1 flex items-center justify-center rounded-full bg-brand h-12 w-[76px] hover:opacity-90 transition-opacity">
+              <button className="absolute primary-button cursor-pointer right-1 top-1 flex items-center justify-center rounded-full h-12 w-[76px] hover:opacity-90 transition-opacity">
                 <Search />
               </button>
             </div>
