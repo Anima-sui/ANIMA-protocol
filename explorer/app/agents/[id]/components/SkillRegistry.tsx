@@ -72,7 +72,7 @@ export default function SkillRegistry({
 
   return (
     <div className="glass-card p-6 flex flex-col gap-6 text-sm">
-      <div className="flex items-center gap-2 pb-3 border-b border-white/10">
+      <div className="flex items-center gap-2 pb-3 border-b border-background/10">
         <Cpu className="text-[#6fa0ff]" size={18} />
         <h2 className="text-base font-semibold text-background">
           Authorized Skill Registry
@@ -93,12 +93,12 @@ export default function SkillRegistry({
             return (
               <div
                 key={skill.name}
-                className="bg-white/5 rounded-xl border border-white/5 overflow-hidden transition-all duration-300"
+                className="bg-background/5 rounded-xl border border-background/5 overflow-hidden transition-all duration-300"
               >
                 {/* Accordion Header */}
                 <div
                   onClick={() => toggleExpand(skill.name)}
-                  className="p-4 flex items-center justify-between cursor-pointer hover:bg-white/[0.02] transition-colors"
+                  className="p-4 flex items-center justify-between cursor-pointer hover:bg-background/[0.02] transition-colors"
                 >
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-[#0241ff]/10 rounded-lg text-[#6fa0ff] border border-[#0241ff]/20">
@@ -114,7 +114,7 @@ export default function SkillRegistry({
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-gray-500 bg-white/5 px-2 py-1 rounded">
+                    <span className="font-mono text-xs text-gray-500 bg-background/5 px-2 py-1 rounded">
                       Walrus Blob
                     </span>
                     {isExpanded ? (
@@ -127,13 +127,13 @@ export default function SkillRegistry({
 
                 {/* Accordion Body */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-2 border-t border-white/5 bg-black/10 flex flex-col gap-3.5 text-xs text-gray-300">
+                  <div className="px-4 pb-4 pt-2 border-t border-background/5 bg-black/10 flex flex-col gap-3.5 text-xs text-gray-300">
                     <p className="text-gray-400 leading-relaxed">
                       {skill.description}
                     </p>
 
                     {/* Walrus details */}
-                    <div className="flex items-center justify-between bg-black/20 p-2.5 rounded-lg border border-white/5">
+                    <div className="flex items-center justify-between bg-black/20 p-2.5 rounded-lg border border-background/5">
                       <div className="flex flex-col gap-0.5">
                         <span className="text-[9px] uppercase tracking-wider text-gray-500 font-semibold">
                           Walrus Storage Manifest
@@ -148,7 +148,7 @@ export default function SkillRegistry({
                             e.stopPropagation();
                             handleCopy(skill.walrusBlobId, skill.name);
                           }}
-                          className="p-1.5 hover:text-background transition-colors hover:bg-white/5 rounded"
+                          className="p-1.5 hover:text-background transition-colors hover:bg-background/5 rounded"
                           title="Copy Blob ID"
                         >
                           {copiedBlobId === skill.name ? (
@@ -161,7 +161,7 @@ export default function SkillRegistry({
                           href={`https://walrus.xyz/blob/${skill.walrusBlobId}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="p-1.5 hover:text-background transition-colors hover:bg-white/5 rounded flex items-center"
+                          className="p-1.5 hover:text-background transition-colors hover:bg-background/5 rounded flex items-center"
                           title="View on Walrus"
                         >
                           <ExternalLink size={13} />
@@ -171,7 +171,7 @@ export default function SkillRegistry({
 
                     {/* Metadata items */}
                     <div className="grid grid-cols-2 gap-3">
-                      <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 flex flex-col gap-0.5">
+                      <div className="bg-background/[0.02] p-2.5 rounded-lg border border-background/5 flex flex-col gap-0.5">
                         <span className="text-[9px] uppercase tracking-wider text-gray-500">
                           Trigger Condition
                         </span>
@@ -179,11 +179,11 @@ export default function SkillRegistry({
                           {skill.triggerCondition}
                         </span>
                       </div>
-                      <div className="bg-white/[0.02] p-2.5 rounded-lg border border-white/5 flex flex-col gap-1">
+                      <div className="bg-background/[0.02] p-2.5 rounded-lg border border-black/5 flex flex-col gap-1">
                         <span className="text-[9px] uppercase tracking-wider text-gray-500">
                           Risk Controls
                         </span>
-                        <div className="flex flex-col gap-0.5 font-mono text-[10px] text-gray-300">
+                        <div className="flex flex-col gap-0.5 font-mono text-[10px] text-background">
                           <div>
                             Max/Action: {skill.riskLimits.maxSpendPerAction} SUI
                           </div>
