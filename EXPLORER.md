@@ -1,11 +1,13 @@
 # ANIMA Explorer — 5 Day Build & Deploy Plan
-> *Owner: Joshua | Stack: Next.js 14, @mysten/dapp-kit, Supabase, Node.js Indexer*
+
+> _Owner: Joshua | Stack: Next.js 14, @mysten/dapp-kit, Supabase, Node.js Indexer_
 
 ---
 
 ## Overview
 
 The ANIMA Explorer is two things in one:
+
 - **Product interface** — where humans mint, fund, and manage their ANIMA agents
 - **Block explorer** — where anyone can look up any agent by address and see its full autonomous history
 
@@ -137,6 +139,7 @@ explorer/
 ---
 
 ### Day 1 — Project Setup + Home Page
+
 > Goal: App runs locally, wallet connects, home page renders with mocked data
 
 #### Morning — Project Setup (3–4 hours)
@@ -149,26 +152,30 @@ npm install @supabase/supabase-js
 ```
 
 **`lib/constants.ts`** — your single source of truth:
+
 ```typescript
-export const PACKAGE_ID = "0x...";         // Your deployed package ID
+export const PACKAGE_ID = "0x..."; // Your deployed package ID
 export const NETWORK = "testnet";
 export const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 export const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 ```
 
 **`lib/sui.ts`** — Sui client setup:
+
 ```typescript
 import { SuiClient, getFullnodeUrl } from "@mysten/sui/client";
 export const suiClient = new SuiClient({ url: getFullnodeUrl("testnet") });
 ```
 
 **`lib/supabase.ts`** — Supabase client:
+
 ```typescript
 import { createClient } from "@supabase/supabase-js";
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 ```
 
 **`app/layout.tsx`** — wrap everything in the wallet provider:
+
 ```typescript
 import { SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -184,6 +191,7 @@ Build these components with **mocked data first**, wire to real data on Day 3:
 - `Navbar.tsx` — logo left, `ConnectButton` from dapp-kit right
 
 **End of Day 1 checkpoint:**
+
 - [ ] `npm run dev` runs with no errors
 - [ ] Wallet connects successfully on testnet
 - [ ] Home page renders with mocked stats and agent cards
@@ -192,6 +200,7 @@ Build these components with **mocked data first**, wire to real data on Day 3:
 ---
 
 ### Day 2 — Mint Page + Agent Profile Layout
+
 > Goal: Mint flow works end-to-end. Agent profile page renders all sections with mocked data.
 
 #### Morning — Mint Page (3–4 hours)
@@ -208,22 +217,27 @@ function handleMint() {
     target: `${PACKAGE_ID}::anima::mint_anima`,
     arguments: [tx.pure.string(agentName)],
   });
-  signAndExecute({ transaction: tx }, {
-    onSuccess: (result) => {
-      // Extract ANIMA object ID from result
-      // Redirect to /agent/[newObjectId]
-    }
-  });
+  signAndExecute(
+    { transaction: tx },
+    {
+      onSuccess: (result) => {
+        // Extract ANIMA object ID from result
+        // Redirect to /agent/[newObjectId]
+      },
+    },
+  );
 }
 ```
 
 **`MintForm.tsx`** fields:
+
 - Agent name (text input)
-- Initial skill name (text input) 
+- Initial skill name (text input)
 - Walrus blob ID for skill (text input — Ezekiel provides this)
 - Submit button — disabled until wallet is connected
 
 **`MintSuccess.tsx`:**
+
 - Shows new ANIMA object ID
 - Shows OwnerCap object ID
 - "View your agent →" link to `/agent/[id]`
@@ -234,6 +248,7 @@ function handleMint() {
 Build all agent profile components with **static mocked data**. Focus on layout and structure, not real data yet.
 
 **`AgentHeader.tsx`:**
+
 ```
 ANIMA: "Atlas"                    ● ACTIVE
 0x1a2b3c...4d5e  [Copy] [View on Sui Explorer ↗]
@@ -241,28 +256,33 @@ Minted: May 27, 2026  |  Rep Score: 142
 ```
 
 **`IdentityPanel.tsx`:**
+
 - Owner address → links to `https://suiexplorer.com/address/[ownerAddress]?network=testnet`
 - OwnerCap ID → links to Sui explorer
 - Mint date
 - Reputation score
 
 **`WalletPanel.tsx`:**
+
 - Current balance in SUI (converted from MIST)
 - Total lifetime volume
 - "Fund Agent" button → opens a simple modal to send SUI to agent wallet address
 
 **`SkillRegistry.tsx`:**
+
 - List of skills, each showing:
   - Skill name
   - Walrus blob ID (truncated, with copy button)
   - "View on Walrus ↗" external link
 
 **`ActionFeed.tsx`:**
+
 - Table/list of actions, newest first
 - Each row: tx type badge, amount, protocol, timestamp, tx digest linked to Sui explorer
 - Empty state: "No actions yet — agent is monitoring"
 
 **End of Day 2 checkpoint:**
+
 - [ ] Mint form renders and wallet signs the transaction
 - [ ] After mint, user is redirected to the agent profile page
 - [ ] All agent profile sections render with mocked data
@@ -271,6 +291,7 @@ Minted: May 27, 2026  |  Rep Score: 142
 ---
 
 ### Day 3 — Wire Real Data + Indexer
+
 > Goal: Agent profile shows real on-chain data. Indexer is running and writing to Supabase.
 
 #### Morning — Wire Sui RPC to Agent Profile (3 hours)
@@ -284,6 +305,7 @@ Minted: May 27, 2026  |  Rep Score: 142
 ```
 
 **`hooks/useAgentActions.ts`** — reads from Supabase:
+
 ```typescript
 // supabase.from('agent_actions')
 //   .select('*')
@@ -304,24 +326,105 @@ npm init -y
 npm install @mysten/sui @supabase/supabase-js dotenv
 ```
 
-**`indexer/listener.ts`** — the core loop:
+**`indexer/listener.ts`** — the core loop (use deterministic cursor polling, **not deprecated WebSocket subscriptions**):
 
 ```typescript
-// Hint: use suiClient.subscribeEvent() or poll suiClient.queryEvents()
-// Filter by: { MoveEventType: `${PACKAGE_ID}::events::AgentActionEvent` }
-// On each event → call handler
+import { getJsonRpcFullnodeUrl, SuiJsonRpcClient } from "@mysten/sui/jsonRpc";
+import { supabase } from "../lib/supabase";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
+const PACKAGE_ID = process.env.PACKAGE_ID!;
+const client = new SuiJsonRpcClient({ url: getJsonRpcFullnodeUrl("testnet") });
+
+async function startEventPollingIndexer() {
+  console.log(
+    "🚀 ANIMA event indexing engine started via deterministic polling...",
+  );
+
+  // Track cursor to prevent duplicate event ingestion
+  let nextCursor: any = null;
+
+  setInterval(async () => {
+    try {
+      const eventResponse = await client.queryEvents({
+        query: { MoveEventType: `${PACKAGE_ID}::events::AgentActionEvent` },
+        cursor: nextCursor,
+        order: "ascending",
+      });
+
+      if (eventResponse.data.length > 0) {
+        console.log(
+          `📡 Ingested ${eventResponse.data.length} new operational events.`,
+        );
+
+        for (const ev of eventResponse.data) {
+          await handleAgentActionEvent(ev);
+        }
+
+        // Advance cursor to prevent replaying events
+        nextCursor = eventResponse.nextCursor;
+      }
+    } catch (error) {
+      console.error("✖ Indexer polling cycle encountered an anomaly:", error);
+    }
+  }, 3000); // Poll every 3 seconds
+}
+
+startEventPollingIndexer();
 ```
+
+**Why this approach?** WebSocket event subscriptions (`subscribeEvent`) were deprecated and removed from the Sui fullnode RPC because streaming sockets frequently drop under transaction load. **Deterministic cursor polling is rock-solid** — it's what Sui's official indexers use.
 
 **`indexer/handlers.ts`** — parse and write:
 
 ```typescript
-// Parse the event fields (agent_id, action_type, amount, tx_digest etc)
-// Write to Supabase agent_actions table
-// Update protocol_stats row (increment total_actions, total_volume)
-// If action_type is KILL_SWITCH → update agents.is_paused = true
+async function handleAgentActionEvent(eventData: any) {
+  // Extract typed variables from Move event payload
+  const { agent_id, action_type, amount, target_protocol } =
+    eventData.parsedJson;
+
+  // Write action to Supabase
+  await supabase.from("agent_actions").insert({
+    agent_object_id: agent_id,
+    tx_digest: eventData.id.txDigest,
+    action_type: action_type,
+    amount: amount,
+    target_protocol: target_protocol,
+    status: "success",
+    checkpoint: eventData.checkpoint,
+  });
+
+  // Update global protocol stats
+  const { data: stats } = await supabase
+    .from("protocol_stats")
+    .select("*")
+    .eq("id", 1)
+    .single();
+  if (stats) {
+    await supabase
+      .from("protocol_stats")
+      .update({
+        total_actions: stats.total_actions + 1,
+        total_volume: (stats.total_volume || 0) + (amount || 0),
+        updated_at: new Date(),
+      })
+      .eq("id", 1);
+  }
+
+  // If kill switch event, pause the agent
+  if (action_type === "KILL_SWITCH") {
+    await supabase
+      .from("agents")
+      .update({ is_paused: true })
+      .eq("object_id", agent_id);
+  }
+}
 ```
 
 Run the indexer locally:
+
 ```bash
 npx ts-node indexer/index.ts
 ```
@@ -329,6 +432,7 @@ npx ts-node indexer/index.ts
 Trigger a test transaction on testnet and confirm the event appears in Supabase.
 
 **End of Day 3 checkpoint:**
+
 - [ ] Agent profile shows real balance, real name, real operational mode from Sui RPC
 - [ ] Indexer is running locally and writing events to Supabase
 - [ ] At least one real event is visible in the ActionFeed
@@ -336,6 +440,7 @@ Trigger a test transaction on testnet and confirm the event appears in Supabase.
 ---
 
 ### Day 4 — Kill Switch + Global Stats + Polish
+
 > Goal: Kill switch works live. Home page shows real protocol stats. UI looks intentional.
 
 #### Morning — Kill Switch (2–3 hours)
@@ -352,6 +457,7 @@ Trigger a test transaction on testnet and confirm the event appears in Supabase.
 ```
 
 **Kill switch confirmation modal:**
+
 - Warning message: "This will permanently pause your agent and return all funds to your wallet."
 - Two buttons: Cancel / Confirm & Sign
 - On confirm → build and sign `trigger_emergency_kill` transaction
@@ -360,6 +466,7 @@ Trigger a test transaction on testnet and confirm the event appears in Supabase.
 #### Late Morning — Fund Agent Modal (1 hour)
 
 Simple modal on `WalletPanel.tsx`:
+
 - Input: amount in SUI
 - On submit → `tx.transferObjects` to agent wallet address
 - On success → balance updates on next poll
@@ -367,6 +474,7 @@ Simple modal on `WalletPanel.tsx`:
 #### Afternoon — Global Stats + Home Page Real Data (2 hours)
 
 **`hooks/useProtocolStats.ts`:**
+
 ```typescript
 // supabase.from('protocol_stats').select('*').eq('id', 1).single()
 ```
@@ -374,6 +482,7 @@ Simple modal on `WalletPanel.tsx`:
 Wire into `ProtocolStats.tsx` — replace mocked numbers with real ones.
 
 **`AgentGrid.tsx`** — real recently minted agents:
+
 ```typescript
 // supabase.from('agents').select('*').order('created_at', { ascending: false }).limit(12)
 ```
@@ -388,6 +497,7 @@ Wire into `ProtocolStats.tsx` — replace mocked numbers with real ones.
 - All external links open in new tab
 
 **End of Day 4 checkpoint:**
+
 - [ ] Kill switch signs transaction, agent shows PAUSED after confirmation
 - [ ] Home page shows real protocol stats from Supabase
 - [ ] Fund agent modal sends real SUI to agent wallet
@@ -396,6 +506,7 @@ Wire into `ProtocolStats.tsx` — replace mocked numbers with real ones.
 ---
 
 ### Day 5 — Deploy + Demo Prep
+
 > Goal: Everything is live on public URLs. Demo loop runs perfectly.
 
 #### Morning — Deploy Explorer to Vercel (2 hours)
@@ -410,6 +521,7 @@ npx vercel --prod
 ```
 
 Set environment variables in Vercel dashboard:
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
@@ -430,6 +542,7 @@ Deploy the Node.js indexer to Railway:
 ```
 
 Set environment variables on Railway:
+
 ```
 SUPABASE_URL=
 SUPABASE_SERVICE_KEY=       ← use service key here, not anon key
@@ -477,40 +590,40 @@ Fix any bugs that surface during the runs.
 
 ## Live URLs (fill in after deploy)
 
-| Service | URL |
-|---|---|
-| Explorer (Vercel) | `https://anima-explorer.vercel.app` |
-| Indexer (Railway) | `https://anima-indexer.up.railway.app` |
-| Sui Testnet Explorer | `https://suiexplorer.com/?network=testnet` |
-| Supabase Dashboard | `https://supabase.com/dashboard/project/[id]` |
-| Contract Package ID | `0x...` |
+| Service              | URL                                           |
+| -------------------- | --------------------------------------------- |
+| Explorer (Vercel)    | `https://anima-explorer.vercel.app`           |
+| Indexer (Railway)    | `https://anima-indexer.up.railway.app`        |
+| Sui Testnet Explorer | `https://suiexplorer.com/?network=testnet`    |
+| Supabase Dashboard   | `https://supabase.com/dashboard/project/[id]` |
+| Contract Package ID  | `0x...`                                       |
 
 ---
 
 ## What Links to Sui Explorer vs What You Build
 
-| Data | ANIMA Explorer | Sui Explorer |
-|---|---|---|
-| Agent name, status, skills, balance | ✅ You build | ❌ |
-| Live action feed (agent-specific) | ✅ You build | ❌ |
-| Kill switch UI | ✅ You build | ❌ |
-| Protocol global stats | ✅ You build | ❌ |
-| Owner address detail | Link out → | ✅ |
-| Transaction digest detail | Link out → | ✅ |
-| OwnerCap object detail | Link out → | ✅ |
-| Raw object JSON | Link out → | ✅ |
+| Data                                | ANIMA Explorer | Sui Explorer |
+| ----------------------------------- | -------------- | ------------ |
+| Agent name, status, skills, balance | ✅ You build   | ❌           |
+| Live action feed (agent-specific)   | ✅ You build   | ❌           |
+| Kill switch UI                      | ✅ You build   | ❌           |
+| Protocol global stats               | ✅ You build   | ❌           |
+| Owner address detail                | Link out →     | ✅           |
+| Transaction digest detail           | Link out →     | ✅           |
+| OwnerCap object detail              | Link out →     | ✅           |
+| Raw object JSON                     | Link out →     | ✅           |
 
 ---
 
 ## Key Dependencies on the Team
 
-| Blocker | Who | When you need it |
-|---|---|---|
-| Contract deployed + Package ID | Joshua (contracts) | Before Day 3 |
-| `mint_anima` function signature confirmed | Joshua (contracts) | Before Day 2 afternoon |
-| `trigger_emergency_kill` function signature | Joshua (contracts) | Before Day 4 morning |
-| Walrus blob ID format confirmed | Ezekiel | Before Day 2 afternoon |
-| Ademola's backend base URL | Ademola | Before Day 4 (optional for MVP) |
+| Blocker                                     | Who                | When you need it                |
+| ------------------------------------------- | ------------------ | ------------------------------- |
+| Contract deployed + Package ID              | Joshua (contracts) | Before Day 3                    |
+| `mint_anima` function signature confirmed   | Joshua (contracts) | Before Day 2 afternoon          |
+| `trigger_emergency_kill` function signature | Joshua (contracts) | Before Day 4 morning            |
+| Walrus blob ID format confirmed             | Ezekiel            | Before Day 2 afternoon          |
+| Ademola's backend base URL                  | Ademola            | Before Day 4 (optional for MVP) |
 
 ---
 
@@ -526,5 +639,5 @@ Fix any bugs that surface during the runs.
 
 ---
 
-*ANIMA Explorer — Sui Overflow 2026*
-*Owner: Joshua | 5 Day Build Target*
+_ANIMA Explorer — Sui Overflow 2026_
+_Owner: Joshua | 5 Day Build Target_
