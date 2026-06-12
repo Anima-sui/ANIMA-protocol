@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Coins, Hourglass, Search } from "lucide-react";
+import { Cpu, Activity, Database, Search } from "lucide-react";
 import React, { useState } from "react";
 
 const Hero = () => {
@@ -40,22 +40,24 @@ const Hero = () => {
 
         {/* Stats Grid */}
         <ul className="grid gap-4 whitespace-nowrap max-xl:grid-cols-2 max-sm:mt-16 max-sm:grid-cols-1 mt-20 grid-cols-3 max-md:mt-24 px-4">
-          {/* Card 1: Total Txn Block */}
+          {/* Card 1: Total Agents (NFAs) */}
           <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full p-2.5">
-                <Box />
+              <div className="mr-3 rounded-full p-2.5 text-[#6fa0ff] bg-[#0241ff]/10">
+                <Cpu />
               </div>
               <div>
-                <h4 className="text-sm text-secondary">Total Txn Block</h4>
+                <h4 className="text-sm text-secondary">Total Agents (NFAs)</h4>
                 <div className="whitespace-nowrap text-lg font-medium">
-                  3.61B
+                  2,842
                 </div>
               </div>
             </div>
             <div className="m-2 rounded-lg p-3 text-sm">
-              <p className="text-secondary">Total Supply</p>
-              <div className="mt-1 font-medium">10B</div>
+              <p className="text-secondary">Network Status</p>
+              <div className="mt-1 font-medium text-emerald-400">
+                Live & Syncing
+              </div>
               <div
                 className="my-3"
                 style={{
@@ -68,46 +70,35 @@ const Hero = () => {
               ></div>
               <div className="flex justify-between">
                 <div>
-                  <p className="text-secondary">TPS (Peak)</p>
-                  <div className="mt-1 font-medium">36 (59)</div>
+                  <p className="text-secondary">Active Loops</p>
+                  <div className="mt-1 font-medium">2,810</div>
                 </div>
                 <div>
-                  <p className="text-secondary">CPS (Peak)</p>
-                  <div className="mt-1 font-medium">59 (404)</div>
+                  <p className="text-secondary">Paused / Killed</p>
+                  <div className="mt-1 font-medium">32</div>
                 </div>
               </div>
             </div>
           </li>
 
-          {/* Card 2: Total Stake */}
+          {/* Card 2: Autonomous Operations */}
           <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full p-2.5">
-                <Coins />
+              <div className="mr-3 rounded-full p-2.5 text-[#6fa0ff] bg-[#0241ff]/10">
+                <Activity />
               </div>
               <div>
-                <h4 className="text-sm text-secondary">Total Stake</h4>
+                <h4 className="text-sm text-secondary">
+                  Autonomous Operations
+                </h4>
                 <div className="whitespace-nowrap text-lg font-medium">
-                  <span className="overflow-hidden whitespace-nowrap leading-none inline">
-                    6.83B
-                  </span>{" "}
-                  <span className="text-sm font-normal text-secondary">
-                    SUI
-                  </span>
-                  <span className="mx-1 font-normal text-secondary">|</span>116{" "}
-                  <span className="text-sm font-normal text-secondary">
-                    Validators
-                  </span>
+                  456,218
                 </div>
               </div>
             </div>
-            <div className="m-2 rounded-lg *: p-3 text-sm">
-              <p className="text-secondary">Last Epoch Rewards</p>
-              <div className="mt-1 font-medium">
-                <span className="overflow-hidden whitespace-nowrap leading-none inline">
-                  20.9K
-                </span>
-              </div>
+            <div className="m-2 rounded-lg p-3 text-sm">
+              <p className="text-secondary">Avg. Operation Latency</p>
+              <div className="mt-1 font-medium">~1.5s</div>
               <div
                 className="my-3"
                 style={{
@@ -120,60 +111,41 @@ const Hero = () => {
               ></div>
               <div className="flex justify-between">
                 <div>
-                  <p className="text-secondary">Total Reward</p>
-                  <div className="mt-1 font-medium">
-                    <span className="inline-block overflow-hidden whitespace-nowrap leading-none">
-                      1.33B
-                    </span>
-                  </div>
+                  <p className="text-secondary">Total Volume</p>
+                  <div className="mt-1 font-medium">1.84M SUI</div>
                 </div>
                 <div>
-                  <p className="text-secondary">Staking APY</p>
-                  <div className="mt-1 font-medium">0.11%</div>
+                  <p className="text-secondary">Avg. Gas Sync</p>
+                  <div className="mt-1 font-medium">0.0009 SUI</div>
                 </div>
               </div>
             </div>
           </li>
 
-          {/* Card 3: Epoch */}
+          {/* Card 3: Skill Storage */}
           <li className="rounded-2xl glass-card shadow-#1 overflow-hidden">
             <div className="flex items-center p-5 pb-3">
-              <div className="mr-3 rounded-full p-2.5">
-                <Hourglass />
+              <div className="mr-3 rounded-full p-2.5 text-[#6fa0ff] bg-[#0241ff]/10">
+                <Database />
               </div>
               <div>
-                <h4 className="text-sm text-secondary">Epoch</h4>
-                <div className="text-lg font-medium">1,127</div>
-              </div>
-              <div className="w-full ml-4">
-                <div
-                  className="ml-auto mt-1 flex h-2 max-w-[100px] overflow-hidden rounded-full bg-inactive"
-                  role="progressbar"
-                  aria-valuenow={15}
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                >
-                  <div
-                    className="flex flex-col justify-center overflow-hidden whitespace-nowrap rounded-full bg-brand text-center text-xs transition duration-500"
-                    style={{ width: "15%" }}
-                  ></div>
-                </div>
-                <div className="mt-4 flex justify-end text-sm text-secondary">
-                  15%
-                </div>
+                <h4 className="text-sm text-secondary">
+                  Walrus Skill Registry
+                </h4>
+                <div className="text-lg font-medium">4,102 Blobs</div>
               </div>
             </div>
             <div className="m-2 rounded-lg p-3 text-sm">
               <div className="flex justify-between">
                 <div>
-                  <p className="text-secondary">Started at</p>
-                  <div className="mt-1 font-medium">
-                    <div>Jun 10, 2026 10:24</div>
-                  </div>
+                  <p className="text-secondary">Storage Model</p>
+                  <div className="mt-1 font-medium">Decentralized</div>
                 </div>
-                <div className="w-[90px] whitespace-nowrap">
-                  <p className="text-secondary">Time Remain</p>
-                  <div className="mt-1 font-medium">20h 23m left</div>
+                <div>
+                  <p className="text-secondary">Indexer Rate</p>
+                  <div className="mt-1 font-medium text-emerald-400">
+                    100% (Sync)
+                  </div>
                 </div>
               </div>
               <div
@@ -188,14 +160,12 @@ const Hero = () => {
               ></div>
               <div className="flex justify-between">
                 <div>
-                  <p className="text-secondary">Checkpoint</p>
-                  <div className="mt-1 font-medium">346,926,614</div>
+                  <p className="text-secondary">Blob Ingest Rate</p>
+                  <div className="mt-1 font-medium">9.2 / Min</div>
                 </div>
-                <div className="w-[90px] whitespace-nowrap">
-                  <p className="text-secondary">Avg Gas Fee</p>
-                  <div className="mt-1 font-medium">
-                    <span>0.00022 SUI</span>
-                  </div>
+                <div>
+                  <p className="text-secondary">Query Speed</p>
+                  <div className="mt-1 font-medium">120ms</div>
                 </div>
               </div>
             </div>
