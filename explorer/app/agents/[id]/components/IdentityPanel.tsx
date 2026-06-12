@@ -66,7 +66,7 @@ export default function IdentityPanel({
           <div className="text-xs font-medium text-gray-400">
             Guardian Owner
           </div>
-          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-gray-300">
+          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-black">
             <span>{truncate(ownerAddress)}</span>
             <button
               onClick={() => handleCopy(ownerAddress, "owner")}
@@ -85,7 +85,7 @@ export default function IdentityPanel({
           <div className="text-xs font-medium text-gray-400 flex items-center gap-1">
             <Key size={12} /> Owner Capability Object
           </div>
-          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-gray-300">
+          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-black">
             <span>{truncate(ownerCapId)}</span>
             <button
               onClick={() => handleCopy(ownerCapId, "ownerCap")}
@@ -104,7 +104,7 @@ export default function IdentityPanel({
           <div className="text-xs font-medium text-gray-400 flex items-center gap-1">
             <Key size={12} /> Backend Capability Object
           </div>
-          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-gray-300">
+          <div className="flex items-center justify-between bg-white/5 px-3 py-2 rounded-lg border border-white/5 font-mono text-xs text-black">
             <span>{truncate(backendCapId)}</span>
             <button
               onClick={() => handleCopy(backendCapId, "backendCap")}

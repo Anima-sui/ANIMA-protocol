@@ -72,7 +72,7 @@ export default function WalletPanel({
           <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">
             Sui Network
           </span>
-          <span className="text-base font-bold text-gray-300">Testnet</span>
+          <span className="text-base font-bold text-black">Testnet</span>
         </div>
       </div>
 
