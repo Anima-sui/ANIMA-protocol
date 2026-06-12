@@ -30,3 +30,8 @@ h1, h2, h3, h4 {
 .primary-text {
   color: #0241ff;
 }
+
+.secondary-button {
+    background: linear-gradient(135deg, #a3c2ff, #6fa0ff 45%, #f4f4f4);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(2, 65, 255, 0.4);
+}
