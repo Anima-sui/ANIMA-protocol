@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Menu, Wifi } from "lucide-react";
+import { ExternalLink, Menu, Wifi } from "lucide-react";
+import Link from "next/link";
 
 const Navbar = () => {
   const [isBlockchainOpen, setIsBlockchainOpen] = useState(false);
@@ -13,7 +14,7 @@ const Navbar = () => {
       style={{ height: "72px" }}
     >
       {/* Logo and Brand */}
-      <a className="flex items-center" href="/">
+      <Link className="flex items-center" href="/">
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -51,7 +52,7 @@ const Navbar = () => {
         <span className="font-bold text-lg">
           Anima <span className="text-sm font-light">Explorer</span>
         </span>
-      </a>
+      </Link>
 
       {/* Navigation - Desktop */}
       <nav className="ml-8 hidden md:flex max-header2:ml-4">
@@ -59,21 +60,31 @@ const Navbar = () => {
         <div className="relative inline-block text-left">
           <button
             onClick={() => setIsBlockchainOpen(!isBlockchainOpen)}
-            className="flex cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand"
+            className="flex hover:text-[#a3c2ff]  cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand"
           >
             Home
           </button>
         </div>
 
         {/* Validators Link */}
-        <a className="rounded px-3 py-2 hover:text-brand" href="/agents">
+        <Link
+          className="rounded hover:text-[#a3c2ff]  px-3 py-2 hover:text-brand"
+          href="/agents"
+        >
           Agents {`(NFAs)`}
-        </a>
+        </Link>
 
-        {/* Coins Link */}
-        <a className="rounded px-3 py-2 hover:text-brand" href="/coins">
-          Coins
-        </a>
+        {/* Mint Agents Link */}
+        <Link
+          className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand"
+          href="/coins"
+        >
+          Mint Agents{" "}
+          <ExternalLink
+            className="text-gray-500 inline-block mb-1 ml-0.5"
+            size={14}
+          />
+        </Link>
       </nav>
 
       {/* Right Side Actions */}
@@ -106,20 +117,27 @@ const Navbar = () => {
           <nav className="flex flex-col px-4 py-4 gap-y-2">
             <button
               onClick={() => setIsBlockchainOpen(!isBlockchainOpen)}
-              className="flex cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand text-left w-full"
+              className="flex hover:text-[#a3c2ff] cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand text-left w-full"
             >
               Home
             </button>
-            <a
-              className="rounded px-3 py-2 hover:text-brand text-sm block"
+            <Link
+              className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand text-sm block"
               href="/agents"
             >
               Agents {`(NFAs)`}
-            </a>
+            </Link>
 
-            <a className="rounded px-3 py-2 hover:text-brand" href="/coins">
-              Coins
-            </a>
+            <Link
+              className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand"
+              href="/coins"
+            >
+              Mint Agents{" "}
+              <ExternalLink
+                className="text-gray-500 inline-block mb-1 ml-0.5"
+                size={14}
+              />
+            </Link>
 
             <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg mt-2">
               Connect wallet
