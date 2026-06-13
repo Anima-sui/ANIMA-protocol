@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""Main entry point for ANIMA agent runtime."""
 
 import sys
 import os
