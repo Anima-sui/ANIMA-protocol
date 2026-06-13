@@ -15,7 +15,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link
             href="/"
-            className="flex p-4 backdrop-blur-md items-center gap-2 font-bold text-xl"
+            className="flex p-4 px-6 rounded-full backdrop-blur-md items-center gap-2 font-bold text-xl"
           >
             <svg
               viewBox="0 0 24 24"
@@ -186,7 +186,7 @@ const Navbar = () => {
 
             {/* CTA Button */}
             <Link href="/mint">
-              <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg mt-2">
+              <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium text-white transition-all hover:shadow-lg mt-2">
                 Connect wallet
               </button>
             </Link>
