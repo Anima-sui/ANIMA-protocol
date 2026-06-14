@@ -1,9 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { getJsonRpcFullnodeUrl, SuiJsonRpcClient } from '@mysten/sui/jsonRpc';
+
+const RPC_TIMEOUT_MS = 10_000; // 10 second timeout for all Sui RPC calls
+
+/**
+ * Wraps a promise with a timeout. Rejects if the promise doesn't resolve within `ms` milliseconds.
+ */
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Sui RPC timed out after ${ms}ms`)), ms);
+    promise
+      .then((val) => { clearTimeout(timer); resolve(val); })
+      .catch((err) => { clearTimeout(timer); reject(err); });
+  });
+}
 
 @Injectable()
 export class SuiService {
   public readonly suiClient: SuiJsonRpcClient;
+  private readonly logger = new Logger(SuiService.name);
 
   constructor() {
     this.suiClient = new SuiJsonRpcClient({ 
@@ -17,12 +32,15 @@ export class SuiService {
    * We request showContent: true so that we can read the object's data
    */
   async getObject(objectId: string) {
-    return this.suiClient.getObject({
-      id: objectId,
-      options: {
-        showContent: true,
-      },
-    });
+    return withTimeout(
+      this.suiClient.getObject({
+        id: objectId,
+        options: {
+          showContent: true,
+        },
+      }),
+      RPC_TIMEOUT_MS,
+    );
   }
 
   /**
@@ -38,5 +56,31 @@ export class SuiService {
     }
     
     return null;
+  }
+
+  /**
+   * Fetches all dynamic fields attached to an object.
+   * Used to read skill entries from the ANIMA object's dynamic field table.
+   */
+  async getDynamicFields(parentId: string) {
+    const fields: any[] = [];
+    let cursor: string | null | undefined = null;
+    let hasNext = true;
+
+    while (hasNext) {
+      const page = await withTimeout(
+        this.suiClient.getDynamicFields({
+          parentId,
+          cursor: cursor ?? undefined,
+        }),
+        RPC_TIMEOUT_MS,
+      );
+
+      fields.push(...page.data);
+      hasNext = page.hasNextPage;
+      cursor = page.nextCursor;
+    }
+
+    return fields;
   }
 }

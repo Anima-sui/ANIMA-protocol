@@ -57,7 +57,7 @@ export function buildFallbackTransfer(
   tx: Transaction,
   params: TransferParams
 ): any {
-  console.log('[PTB] Using fallback transfer — DeepBook unavailable');
+  console.log('[DEEPBOOK] Using fallback transfer — DeepBook unavailable');
   
   // Split the exact amount of SUI from gas
   const [coin] = tx.splitCoins(tx.gas, [params.amount]);
