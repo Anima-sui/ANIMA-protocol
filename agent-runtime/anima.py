@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-"""CLI for ANIMA agent runtime operations."""
 
 import sys
 import os
