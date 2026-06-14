@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ExternalLink, Menu, Wifi } from "lucide-react";
 import Link from "next/link";
+import { ConnectButton } from "@mysten/dapp-kit";
 
 const Navbar = () => {
   const [isBlockchainOpen, setIsBlockchainOpen] = useState(false);
@@ -29,9 +30,9 @@ const Navbar = () => {
           <path
             d="M12 6.5C10.5 4.2 7.2 4.2 5.5 6.2C3.2 8.8 4.5 13.2 12 18.5C19.5 13.2 20.8 8.8 18.5 6.2C16.8 4.2 13.5 4.2 12 6.5Z"
             stroke="white"
-            stroke-width="1.5"
-            stroke-linejoin="round"
-            stroke-linecap="round"
+            strokeWidth="1.5"
+            strokeLinejoin="round"
+            strokeLinecap="round"
           />
 
           <polygon points="6.5,8.5 17.5,8.5 16,11 12,12 8,11" fill="white" />
@@ -39,8 +40,8 @@ const Navbar = () => {
           <path
             d="M12 12V14.5M12 14.5L9.5 13.5M12 14.5L14.5 13.5M12 14.5V17"
             stroke="white"
-            stroke-width="1.2"
-            stroke-linecap="round"
+            strokeWidth="1.2"
+            strokeLinecap="round"
           />
 
           <circle cx="12" cy="14.5" r="1" fill="white" />
@@ -90,9 +91,7 @@ const Navbar = () => {
       {/* Right Side Actions */}
       <div className="ml-auto flex items-center gap-x-2 md:gap-x-3">
         {/* Connect Wallet Button - Hidden on small screens */}
-        <button className="hidden sm:inline-flex items-center primary-button gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg">
-          Connect wallet
-        </button>
+        <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium !text-white transition-all hover:shadow-lg mt-2" />
 
         {/* Theme Toggle Button */}
         <div className="pointer-events-auto  bg-[#6fa0ff]/15 px-4 py-2 rounded-full">
@@ -139,9 +138,7 @@ const Navbar = () => {
               />
             </Link>
 
-            <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg mt-2">
-              Connect wallet
-            </button>
+            <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium !text-white transition-all hover:shadow-lg mt-2" />
           </nav>
         </div>
       )}
