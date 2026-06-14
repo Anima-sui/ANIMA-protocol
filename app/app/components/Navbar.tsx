@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { ExternalLink, Menu, X } from "lucide-react";
+import { ConnectButton } from "@mysten/dapp-kit";
+import ConnectBtn from "./ConnectBtn";
 
 const Navbar = () => {
   const [isAboutOpen, setIsAboutOpen] = useState(false);
@@ -185,11 +187,7 @@ const Navbar = () => {
             </div>
 
             {/* CTA Button */}
-            <Link href="/mint">
-              <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium text-white transition-all hover:shadow-lg mt-2">
-                Connect wallet
-              </button>
-            </Link>
+            <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium !text-white transition-all hover:shadow-lg mt-2" />
           </div>
         </div>
       </header>
@@ -321,15 +319,9 @@ const Navbar = () => {
               Discord
             </a>
 
-            <Link
-              href="/mint"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="px-4 py-3"
-            >
-              <button className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg">
-                Connect wallet
-              </button>
-            </Link>
+            <div className="px-4 py-3">
+              <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg" />
+            </div>
           </div>
         </div>
       )}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Open_Sans, DM_Sans } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./Providers";
 
 const openSans = Open_Sans({
   variable: "--font-open-sans",
@@ -27,7 +28,9 @@ export default function RootLayout({
       lang="en"
       className={`${openSans.variable} ${dmSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <Providers> {children} </Providers>
+      </body>
     </html>
   );
 }
