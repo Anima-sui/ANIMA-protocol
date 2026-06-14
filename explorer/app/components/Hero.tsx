@@ -2,9 +2,23 @@
 
 import { Cpu, Activity, Database, Search } from "lucide-react";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useProtocolStats } from "@/hooks/useProtocolStats";
+import { formatAmount } from "@/lib/utils";
 
 const Hero = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+  const { stats, loading } = useProtocolStats();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const query = searchQuery.trim();
+    if (!query) return;
+    router.push(`/agents/${query}`);
+  };
+
+  const totalVolumeSui = parseFloat(stats.totalVolume) / 1_000_000_000;
 
   return (
     <section className="py-12">
@@ -15,12 +29,15 @@ const Hero = () => {
         </h1>
 
         {/* Search Bar */}
-        <div className="relative z-50 mx-auto mt-8 max-w-[730px] max-md:hidden max-md:w-full max-sm:px-4">
+        <form
+          onSubmit={handleSearch}
+          className="relative z-50 mx-auto mt-8 max-w-[730px] max-sm:px-4"
+        >
           <div style={{ height: "56px" }}>
             <div className="relative rounded-full">
               <input
                 type="text"
-                placeholder="Search by Account, Package, Object, Transaction, SuiNS"
+                placeholder="Search by ANIMA Object ID (0x...)"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full rounded-full bg-foreground p-6 text-sm shadow-#1 backdrop-blur-sm placeholder:font-normal text-background h-[56px] pr-[128px] focus:outline-none focus:ring-2 focus:ring-brand"
@@ -31,12 +48,15 @@ const Hero = () => {
               >
                 /
               </span>
-              <button className="absolute primary-button cursor-pointer right-1 top-1 flex items-center justify-center rounded-full h-12 w-[76px] hover:opacity-90 transition-opacity">
+              <button
+                type="submit"
+                className="absolute primary-button cursor-pointer right-1 top-1 flex items-center justify-center rounded-full h-12 w-[76px] hover:opacity-90 transition-opacity"
+              >
                 <Search />
               </button>
             </div>
           </div>
-        </div>
+        </form>
 
         {/* Stats Grid */}
         <ul className="grid gap-4 whitespace-nowrap max-xl:grid-cols-2 max-sm:mt-16 max-sm:grid-cols-1 mt-20 grid-cols-3 max-md:mt-24 px-4">
@@ -49,7 +69,7 @@ const Hero = () => {
               <div>
                 <h4 className="text-sm text-secondary">Total Agents (NFAs)</h4>
                 <div className="whitespace-nowrap text-lg font-medium">
-                  2,842
+                  {loading ? "..." : stats.totalAgents.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -71,11 +91,15 @@ const Hero = () => {
               <div className="flex justify-between">
                 <div>
                   <p className="text-secondary">Active Loops</p>
-                  <div className="mt-1 font-medium">2,810</div>
+                  <div className="mt-1 font-medium">
+                    {loading ? "..." : stats.totalActive.toLocaleString()}
+                  </div>
                 </div>
                 <div>
                   <p className="text-secondary">Paused / Killed</p>
-                  <div className="mt-1 font-medium">32</div>
+                  <div className="mt-1 font-medium">
+                    {loading ? "..." : stats.totalPaused.toLocaleString()}
+                  </div>
                 </div>
               </div>
             </div>
@@ -92,7 +116,7 @@ const Hero = () => {
                   Autonomous Operations
                 </h4>
                 <div className="whitespace-nowrap text-lg font-medium">
-                  456,218
+                  {loading ? "..." : stats.totalActions.toLocaleString()}
                 </div>
               </div>
             </div>
@@ -112,7 +136,9 @@ const Hero = () => {
               <div className="flex justify-between">
                 <div>
                   <p className="text-secondary">Total Volume</p>
-                  <div className="mt-1 font-medium">1.84M SUI</div>
+                  <div className="mt-1 font-medium font-mono text-xs">
+                    {loading ? "..." : `${totalVolumeSui.toLocaleString(undefined, { maximumFractionDigits: 2 })} SUI`}
+                  </div>
                 </div>
                 <div>
                   <p className="text-secondary">Avg. Gas Sync</p>
@@ -132,7 +158,9 @@ const Hero = () => {
                 <h4 className="text-sm text-secondary">
                   Walrus Skill Registry
                 </h4>
-                <div className="text-lg font-medium">4,102 Blobs</div>
+                <div className="text-lg font-medium">
+                  {loading ? "..." : `${stats.totalAgents} Blobs`}
+                </div>
               </div>
             </div>
             <div className="m-2 rounded-lg p-3 text-sm">

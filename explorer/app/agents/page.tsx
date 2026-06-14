@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import Grainient from "@/app/components/animations/Grainient";
+import { supabase } from "@/lib/supabase";
 import {
   Cpu,
   ExternalLink,
@@ -13,8 +14,6 @@ import {
   Check,
   Clock,
   ArrowRight,
-  ShieldCheck,
-  ShieldAlert,
 } from "lucide-react";
 
 interface ActionItem {
@@ -32,141 +31,71 @@ interface AgentItem {
   lastAction: ActionItem;
 }
 
-const MOCK_AGENTS: AgentItem[] = [
-  {
-    objectId:
-      "0x63b6429339342dd64edd48c56420983c1dd37b4d8e573123e051a4cf52a092a1",
-    name: "Atlas V1",
-    status: "ACTIVE",
-    reputation: 142,
-    lastAction: {
-      actionType: "SWAP",
-      amount: "15500000000",
-      timestamp: Date.now() - 120000,
-      txDigest: "9yH8W3c8R1z2A7b3c6d4e5f6g7h8i9j0k1l2m3n4o5p",
-    },
-  },
-  {
-    objectId:
-      "0x3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b",
-    name: "Aegis",
-    status: "ACTIVE",
-    reputation: 118,
-    lastAction: {
-      actionType: "SWAP",
-      amount: "25000000000",
-      timestamp: Date.now() - 180000,
-      txDigest: "z9x8y7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e",
-    },
-  },
-  {
-    objectId:
-      "0x5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i5j6k",
-    name: "Chronos",
-    status: "PAUSED",
-    reputation: 92,
-    lastAction: {
-      actionType: "KILL_SWITCH",
-      amount: "34000000000",
-      timestamp: Date.now() - 14400000,
-      txDigest: "k1j2i3h4g5f6e7d8c9b0a1z2y3x4w5v6u7t8s9r0q1p",
-    },
-  },
-  {
-    objectId:
-      "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b",
-    name: "Elysium",
-    status: "ACTIVE",
-    reputation: 156,
-    lastAction: {
-      actionType: "COMPUTE",
-      amount: "80000000",
-      timestamp: Date.now() - 900000,
-      txDigest: "q8w7e6r5t4y3u2i1o0p9a8s7d6f5g4h3j2k1l0z9x8c",
-    },
-  },
-  {
-    objectId:
-      "0x9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b",
-    name: "Hesperia",
-    status: "ACTIVE",
-    reputation: 104,
-    lastAction: {
-      actionType: "SWAP",
-      amount: "12000000000",
-      timestamp: Date.now() - 10800000,
-      txDigest: "m9n8b7v6c5x4z3l2k1j0h9g8f7d6s5a4p3o2i1u0y9t",
-    },
-  },
-  {
-    objectId:
-      "0x1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g",
-    name: "Prometheus",
-    status: "ACTIVE",
-    reputation: 112,
-    lastAction: {
-      actionType: "COMPUTE",
-      amount: "40000000",
-      timestamp: Date.now() - 18000000,
-      txDigest: "y1x2w3v4u5t6s7r8q9p0o1n2m3l4k5j6i7h8g9f0e1d",
-    },
-  },
-  {
-    objectId:
-      "0x3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2g3h4i",
-    name: "Zephyr",
-    status: "ACTIVE",
-    reputation: 124,
-    lastAction: {
-      actionType: "SWAP",
-      amount: "8500000000",
-      timestamp: Date.now() - 21600000,
-      txDigest: "h9g8f7e6d5c4b3a2z1y0x9w8v7u6t5s4r3q2p1o0n9m",
-    },
-  },
-  {
-    objectId:
-      "0x5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b",
-    name: "Valkyrie",
-    status: "ACTIVE",
-    reputation: 138,
-    lastAction: {
-      actionType: "SWAP",
-      amount: "32000000000",
-      timestamp: Date.now() - 3600000,
-      txDigest: "j1k2l3m4n5o6p7q8r9s0t1u2v3w4x5y6z7a8b9c0d1e",
-    },
-  },
-  {
-    objectId:
-      "0x7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f",
-    name: "Hyperion",
-    status: "ACTIVE",
-    reputation: 147,
-    lastAction: {
-      actionType: "TRANSFER",
-      amount: "150000000000",
-      timestamp: Date.now() - 43200000,
-      txDigest: "u9i8o7p6l5k4j3h2g1f0d9s8a7q6w5e4r3t2y1u0i9o",
-    },
-  },
-  {
-    objectId:
-      "0x9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d",
-    name: "Nemesis",
-    status: "PAUSED",
-    reputation: 80,
-    lastAction: {
-      actionType: "KILL_SWITCH",
-      amount: "4200000000",
-      timestamp: Date.now() - 86400000,
-      txDigest: "x9c8v7b6n5m4k3j2h1g0f9d8s7a6q5w4e3r2t1y0u9i",
-    },
-  },
-];
-
 export default function AgentsPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [agents, setAgents] = useState<AgentItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function fetchAgents() {
+      try {
+        const { data: dbAgents, error: dbError } = await supabase
+          .from("agents")
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(20);
+
+        if (dbError) throw dbError;
+
+        if (dbAgents && isMounted) {
+          const formattedAgents: AgentItem[] = [];
+          for (const agent of dbAgents) {
+            // Fetch the most recent action for this agent
+            const { data: actionsData } = await supabase
+              .from("agent_actions")
+              .select("*")
+              .eq("agent_object_id", agent.object_id)
+              .order("timestamp", { ascending: false })
+              .limit(1);
+
+            const lastAction = actionsData && actionsData.length > 0 ? {
+              actionType: actionsData[0].action_type,
+              amount: actionsData[0].amount ? actionsData[0].amount.toString() : "0",
+              timestamp: new Date(actionsData[0].timestamp).getTime(),
+              txDigest: actionsData[0].tx_digest,
+            } : {
+              actionType: "MINT",
+              amount: "0",
+              timestamp: new Date(agent.created_at).getTime(),
+              txDigest: "unknown",
+            };
+
+            formattedAgents.push({
+              objectId: agent.object_id,
+              name: agent.name,
+              status: agent.is_paused ? "PAUSED" : "ACTIVE",
+              reputation: agent.reputation_score,
+              lastAction: lastAction,
+            });
+          }
+          setAgents(formattedAgents);
+        }
+      } catch (err) {
+        console.error("Error loading agents:", err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    fetchAgents();
+    const interval = setInterval(fetchAgents, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, []);
 
   const handleCopy = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
@@ -175,8 +104,6 @@ export default function AgentsPage() {
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
-
-  const truncateId = (id: string) => `${id.slice(0, 8)}...${id.slice(-8)}`;
 
   const getBadgeColor = (type: string) => {
     switch (type.toUpperCase()) {
@@ -256,8 +183,7 @@ export default function AgentsPage() {
                 <Activity className="text-[#6fa0ff]" /> Active Network Agents
               </h1>
               <p className="text-sm text-gray-400 mt-1">
-                Showing the 10 most recently active AI agents (NFAs) on the Sui
-                protocol ledger.
+                Showing active AI agents (NFAs) on the Sui protocol ledger.
               </p>
             </div>
             <div className="bg-white/5 border border-white/10 px-4 py-2 rounded-xl text-xs flex items-center gap-2 w-fit">
@@ -274,77 +200,103 @@ export default function AgentsPage() {
               <table className="w-full text-left border-collapse text-sm">
                 <thead>
                   <tr className="border-b border-white/10 text-gray-400 text-xs font-semibold uppercase tracking-wider bg-white/[0.02]">
-                    <th className="py-4 px-6 w-1/2">Agent Address</th>
-                    <th className="py-4 px-6 w-1/2">
+                    <th className="py-4 px-6 w-[60%]">Agent Address / Name</th>
+                    <th className="py-4 px-6 w-[40%]">
                       Most Recent Activity Log
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {MOCK_AGENTS.map((agent) => (
-                    <tr
-                      key={agent.objectId}
-                      className="border-b border-white/5 hover:bg-white/[0.01] transition-colors group"
-                    >
-                      {/* Agent Address */}
-                      <td className="py-4 px-6 font-mono">
-                        <div className="flex items-center gap-2">
-                          <Cpu size={14} className="text-[#6fa0ff] shrink-0" />
-                          <Link
-                            href={`/agents/${agent.objectId}`}
-                            className="font-bold text-black hover:text-[#6fa0ff] hover:underline transition-colors cursor-pointer"
-                          >
-                            {agent.objectId}
-                          </Link>
-                          <button
-                            onClick={(e) => handleCopy(e, agent.objectId)}
-                            className="p-1 hover:text-black transition-colors cursor-pointer text-gray-500 hover:bg-white/5 rounded"
-                            title="Copy Address"
-                          >
-                            {copiedId === agent.objectId ? (
-                              <Check size={12} className="text-emerald-400" />
-                            ) : (
-                              <Copy size={12} />
-                            )}
-                          </button>
-                        </div>
-                      </td>
-
-                      {/* Most Recent Log (badge, amount, time, tx) */}
-                      <td className="py-4 px-6">
-                        <div className="flex items-center flex-wrap gap-2 text-xs text-gray-300">
-                          <span
-                            className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider shrink-0 ${getBadgeColor(
-                              agent.lastAction.actionType,
-                            )}`}
-                          >
-                            {agent.lastAction.actionType}
-                          </span>
-                          {agent.lastAction.actionType !== "MINT" &&
-                            agent.lastAction.actionType !== "KILL_SWITCH" && (
-                              <span className="font-mono font-medium text-black">
-                                {formatAmount(agent.lastAction.amount)}
-                              </span>
-                            )}
-                          <span className="text-gray-500 flex items-center gap-1">
-                            <Clock size={11} />
-                            {formatTime(agent.lastAction.timestamp)}
-                          </span>
-                          <span className="text-gray-500">|</span>
-                          <a
-                            href={`https://suiexplorer.com/txblock/${agent.lastAction.txDigest}?network=testnet`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-xs font-mono text-[#6fa0ff] hover:text-black hover:underline cursor-pointer"
-                          >
-                            Tx: {agent.lastAction.txDigest.slice(0, 6)}...
-                            {agent.lastAction.txDigest.slice(-6)}
-                            <ExternalLink size={11} className="opacity-50" />
-                          </a>
-                        </div>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={2} className="py-8 text-center text-gray-400">
+                        Loading agents...
                       </td>
                     </tr>
-                  ))}
+                  ) : agents.length === 0 ? (
+                    <tr>
+                      <td colSpan={2} className="py-8 text-center text-gray-400">
+                        No active agents found. Mint an agent to get started.
+                      </td>
+                    </tr>
+                  ) : (
+                    agents.map((agent) => (
+                      <tr
+                        key={agent.objectId}
+                        className="border-b border-white/5 hover:bg-white/[0.01] transition-colors group"
+                      >
+                        {/* Agent Address */}
+                        <td className="py-4 px-6 font-mono">
+                          <div className="flex items-center gap-2">
+                            <Cpu size={14} className="text-[#6fa0ff] shrink-0" />
+                            <div className="flex flex-col">
+                              <Link
+                                href={`/agents/${agent.objectId}`}
+                                className="font-bold text-black hover:text-[#6fa0ff] hover:underline transition-colors cursor-pointer"
+                              >
+                                {agent.objectId}
+                              </Link>
+                              <span className="text-[10px] text-gray-500 font-sans font-semibold mt-0.5">
+                                Name: {agent.name} | Rep: {agent.reputation} | Status:{" "}
+                                <span className={agent.status === "ACTIVE" ? "text-emerald-400" : "text-red-400"}>
+                                  {agent.status}
+                                </span>
+                              </span>
+                            </div>
+                            <button
+                              onClick={(e) => handleCopy(e, agent.objectId)}
+                              className="p-1 hover:text-black transition-colors cursor-pointer text-gray-500 hover:bg-white/5 rounded"
+                              title="Copy Address"
+                            >
+                              {copiedId === agent.objectId ? (
+                                <Check size={12} className="text-emerald-400" />
+                              ) : (
+                                <Copy size={12} />
+                              )}
+                            </button>
+                          </div>
+                        </td>
+
+                        {/* Most Recent Log (badge, amount, time, tx) */}
+                        <td className="py-4 px-6">
+                          <div className="flex items-center flex-wrap gap-2 text-xs text-gray-300">
+                            <span
+                              className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold border uppercase tracking-wider shrink-0 ${getBadgeColor(
+                                agent.lastAction.actionType,
+                              )}`}
+                            >
+                              {agent.lastAction.actionType}
+                            </span>
+                            {agent.lastAction.actionType !== "MINT" &&
+                              agent.lastAction.actionType !== "KILL_SWITCH" && (
+                                <span className="font-mono font-medium text-black">
+                                  {formatAmount(agent.lastAction.amount)}
+                                </span>
+                              )}
+                            <span className="text-gray-500 flex items-center gap-1">
+                              <Clock size={11} />
+                              {formatTime(agent.lastAction.timestamp)}
+                            </span>
+                            {agent.lastAction.txDigest !== "unknown" && (
+                              <>
+                                <span className="text-gray-500">|</span>
+                                <a
+                                  href={`https://suiexplorer.com/txblock/${agent.lastAction.txDigest}?network=testnet`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center gap-1 text-xs font-mono text-[#6fa0ff] hover:text-black hover:underline cursor-pointer"
+                                >
+                                  Tx: {agent.lastAction.txDigest.slice(0, 6)}...
+                                  {agent.lastAction.txDigest.slice(-6)}
+                                  <ExternalLink size={11} className="opacity-50" />
+                                </a>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>

@@ -1,11 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import Grainient from "@/app/components/animations/Grainient";
 import { Wallet, Shield, Cpu, History, ShieldAlert } from "lucide-react";
+import { useCurrentAccount, useSuiClient, useSignAndExecuteTransaction } from "@mysten/dapp-kit";
+import { Transaction } from "@mysten/sui/transactions";
+import { PACKAGE_ID } from "@/lib/constants";
+import { useAgent } from "@/hooks/useAgent";
+import { useAgentActions } from "@/hooks/useAgentActions";
 
 // Import structured widgets
 import AgentHeader from "./components/AgentHeader";
@@ -19,11 +25,136 @@ type TabType = "overview" | "skills" | "activity" | "emergency";
 
 export default function AgentProfilePage() {
   const params = useParams();
-  const id =
-    (params?.id as string) ||
-    "0x63b6429339342dd64edd48c56420983c1dd37b4d8e573123e051a4cf52a092a1";
+  const id = params?.id as string;
 
   const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const [hasOwnerCap, setHasOwnerCap] = useState(false);
+  const [ownerCapObjectId, setOwnerCapObjectId] = useState<string | null>(null);
+  const [isExecutingKill, setIsExecutingKill] = useState(false);
+
+  const currentAccount = useCurrentAccount();
+  const suiClient = useSuiClient();
+  const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+
+  // Load live agent data from Sui RPC + Supabase
+  const { agent, loading, error } = useAgent(id);
+  // Load actions log
+  const { actions, loading: loadingActions } = useAgentActions(id);
+
+  // Check if connected wallet owns the OwnerCap for this agent
+  useEffect(() => {
+    if (!currentAccount || !agent) {
+      setHasOwnerCap(false);
+      setOwnerCapObjectId(null);
+      return;
+    }
+
+    async function checkOwnerCap() {
+      try {
+        const ownedObjects = await suiClient.getOwnedObjects({
+          owner: currentAccount!.address,
+          filter: {
+            StructType: `${PACKAGE_ID}::protocol::OwnerCap`,
+          },
+          options: {
+            showContent: true,
+          },
+        });
+
+        let foundCapId: string | null = null;
+        const ownsCap = ownedObjects.data.some((obj) => {
+          const fields = (obj.data?.content as any)?.fields;
+          if (fields && fields.anima_id === agent?.objectId) {
+            foundCapId = obj.data!.objectId;
+            return true;
+          }
+          return false;
+        });
+
+        setHasOwnerCap(ownsCap);
+        setOwnerCapObjectId(foundCapId);
+      } catch (err) {
+        console.error("Error querying owned OwnerCap:", err);
+        // Fallback to address matching
+        const ownsByAddress = currentAccount!.address === agent?.ownerAddress;
+        setHasOwnerCap(ownsByAddress);
+        setOwnerCapObjectId(ownsByAddress ? agent?.ownerCapId : null);
+      }
+    }
+
+    checkOwnerCap();
+  }, [currentAccount, agent, suiClient]);
+
+  const handleConfirmKill = async () => {
+    if (!agent) return;
+    
+    // Resolve capability ID
+    const capId = ownerCapObjectId || agent.ownerCapId;
+    if (!capId) {
+      alert("Missing OwnerCap object ID. Make sure it is indexed in Supabase or held in your wallet.");
+      return;
+    }
+
+    setIsExecutingKill(true);
+    try {
+      const tx = new Transaction();
+      tx.moveCall({
+        target: `${PACKAGE_ID}::protocol::trigger_emergency_kill`,
+        arguments: [
+          tx.object(agent.objectId),
+          tx.object(capId),
+        ],
+      });
+
+      const response = await signAndExecuteTransaction({ transaction: tx });
+      await suiClient.waitForTransaction({ digest: response.digest });
+      alert("Emergency Hatch triggered. Agent is PAUSED and funds have been returned to your wallet.");
+      window.location.reload();
+    } catch (err: any) {
+      console.error("Kill switch failed:", err);
+      alert(err.message || "Failed to trigger emergency kill switch.");
+    } finally {
+      setIsExecutingKill(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-accent text-white flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          <p className="text-sm text-gray-400">Syncing Agent Ledger...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !agent) {
+    return (
+      <div className="min-h-screen bg-accent text-white flex flex-col">
+        <Navbar />
+        <main className="flex-1 flex flex-col items-center justify-center p-6 text-center">
+          <ShieldAlert className="w-12 h-12 text-red-500 mb-3" />
+          <h2 className="text-xl font-bold text-background">Agent Not Found</h2>
+          <p className="text-sm text-gray-400 mt-1 max-w-sm">
+            We couldn't retrieve the specified ANIMA agent object {id} from the Sui Testnet blockchain or our database.
+          </p>
+          <Link href="/agents" className="mt-6">
+            <button className="primary-button px-5 py-2.5 rounded-full text-xs font-semibold text-white cursor-pointer">
+              Back to Agents
+            </button>
+          </Link>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Sum volume from SWAP/TRANSFER actions
+  const totalVolumeSui = actions.reduce((acc, act) => {
+    const isVolumeType = act.actionType === "SWAP" || act.actionType === "TRANSFER";
+    return acc + (isVolumeType ? parseFloat(act.amount) / 1_000_000_000 : 0);
+  }, 0);
 
   return (
     <div className="relative min-h-screen flex flex-col bg-accent text-white overflow-hidden">
@@ -62,9 +193,9 @@ export default function AgentProfilePage() {
         <main className="flex-1 w-[calc(100%-1rem)] bg-foreground rounded-tl-3xl rounded-tr-3xl max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 flex flex-col gap-6">
           {/* Header block: Name, status, ID */}
           <AgentHeader
-            objectId={id}
-            name="Atlas V1 (AI Sovereign Agent)"
-            isPaused={false}
+            objectId={agent.objectId}
+            name={agent.name}
+            isPaused={agent.isPaused}
           />
 
           {/* Navigation Tabs Bar */}
@@ -119,29 +250,36 @@ export default function AgentProfilePage() {
           <div className="w-full transition-opacity duration-300">
             {activeTab === "overview" && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch animate-fadeIn">
-                <WalletPanel balanceSui={450.75} totalVolumeSui={1840.5} />
+                <WalletPanel agentObjectId={agent.objectId} balanceSui={agent.walletBalance} totalVolumeSui={totalVolumeSui} />
                 <IdentityPanel
-                  ownerCapId="0x2dbccc75d6f9d21987786ea3a70820246391a97b0457a7218e12a134f2c9f90"
-                  reputationScore={142}
+                  ownerAddress={agent.ownerAddress}
+                  ownerCapId={agent.ownerCapId}
+                  backendCapId={agent.objectId}
+                  reputationScore={agent.reputationScore}
+                  createdEpoch={agent.createdEpoch}
                 />
               </div>
             )}
 
             {activeTab === "skills" && (
               <div className="w-full animate-fadeIn">
-                <SkillRegistry />
+                <SkillRegistry skills={agent.skills} />
               </div>
             )}
 
             {activeTab === "activity" && (
               <div className="w-full animate-fadeIn">
-                <ActionFeed />
+                <ActionFeed actions={actions} />
               </div>
             )}
 
             {activeTab === "emergency" && (
               <div className="max-w-2xl mx-auto w-full animate-fadeIn">
-                <KillSwitch hasOwnerCap={true} />
+                <KillSwitch
+                  hasOwnerCap={hasOwnerCap}
+                  onConfirmKill={handleConfirmKill}
+                  isExecuting={isExecutingKill}
+                />
               </div>
             )}
           </div>
