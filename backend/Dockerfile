@@ -2,7 +2,7 @@ FROM node:22-alpine
 RUN npm install -g pnpm
 WORKDIR /app
 COPY backend/package.json backend/pnpm-lock.yaml ./
-RUN pnpm i --frozen-lockfile
+RUN pnpm i --frozen-lockfile --config.unsafe-perm=true
 COPY backend/ .
 RUN pnpm run build
 CMD ["pnpm", "run", "start"]
