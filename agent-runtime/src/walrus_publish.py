@@ -154,30 +154,30 @@ class WalrusPublisher:
             return None
     
     def retrieve_config_from_blob(self, blob_id: str) -> Optional[Dict[str, Any]]:
-        """
-        Retrieve configuration from Walrus using Blob ID.
-        
-        Args:
-            blob_id: Walrus Blob ID
-        
-        Returns:
-            Configuration dictionary or None if retrieval failed
-        """
         try:
-            logger.info(f"📥 Retrieving config from Walrus blob: {blob_id}")
-            
-            # Query Walrus aggregator for the blob
+            logger.info(f"📥 Retrieving from Walrus: {blob_id}")
             url = f"{self.aggregator_url}/v1/blobs/{blob_id}"
-            
-            response = requests.get(url, timeout=30)
+            response = requests.get(url, timeout=15)
             
             if response.status_code == 200:
                 config = response.json()
-                logger.info(f"✓ Config retrieved successfully")
+                logger.info(f"✓ Loaded dynamic skill config from Walrus")
                 return config
-            else:
-                logger.error(f"✖ Failed to retrieve blob. Status: {response.status_code}")
-                return None
+            
+            logger.warning(f"Walrus returned {response.status_code} for {blob_id}")
+            # Optional: fallback query to backend for latest config
+            return self._fallback_to_backend(blob_id)
+        
+        except Exception as e:
+            logger.error(f"Walrus retrieval failed: {e}")
+            return self._fallback_to_backend(blob_id)  # or raise
+
+    def _fallback_to_backend(self, blob_id: str = None) -> Optional[Dict[str, Any]]:
+        # Call backend for resolved skill config (new endpoint you can add)
+        try:
+            resp = requests.get(f"{self.backend_url.rstrip('/')}/skills/latest", timeout=10)  # or /skills/{blob_id}
+            if resp.status_code == 200:
+                return resp.json()
         
         except Exception as e:
             logger.error(f"✖ Error retrieving config from Walrus: {e}")

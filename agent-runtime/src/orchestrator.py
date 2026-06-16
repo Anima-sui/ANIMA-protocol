@@ -27,7 +27,7 @@ class OrchestratorConfig:
         self.operator_address: Optional[str] = os.getenv("OPERATOR_PUBLIC_ADDRESS")
         self.sui_rpc_url = os.getenv("SUI_RPC_URL", "https://testnet-rpc.sui.io")
         self.walrus_endpoint = os.getenv("WALRUS_ENDPOINT", "https://aggregator.walrus.testnet.sui.io")
-        self.backend_url = os.getenv("BACKEND_API_URL", "http://localhost:3000")
+        self.backend_url = os.getenv("BACKEND_API_URL", "https://kgchzygj0s3b0l0t7v4a270q.13.53.172.82.sslip.io/")
         self.poll_interval = int(os.getenv("POLL_INTERVAL", "3"))
         self.enable_mock_mode = os.getenv("ENABLE_MOCK_MODE", "false").lower() == "true"
         self.mock_signal_interval = int(os.getenv("MOCK_SIGNAL_INTERVAL", "45"))
