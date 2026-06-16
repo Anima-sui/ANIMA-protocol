@@ -59,12 +59,13 @@ const Navbar = () => {
       <nav className="ml-8 hidden md:flex max-header2:ml-4">
         {/* Blockchain Dropdown */}
         <div className="relative inline-block text-left">
-          <button
+          <Link
+            href="/"
             onClick={() => setIsBlockchainOpen(!isBlockchainOpen)}
             className="flex hover:text-[#a3c2ff]  cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand"
           >
             Home
-          </button>
+          </Link>
         </div>
 
         {/* Validators Link */}
@@ -112,14 +113,15 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="absolute top-[72px] left-0 right-0 bg-background md:hidden border-b shadow-lg">
+        <div className="z-50 absolute top-[72px] left-0 right-0 bg-background md:hidden border-b shadow-lg">
           <nav className="flex flex-col px-4 py-4 gap-y-2">
-            <button
+            <Link
+              href="/"
               onClick={() => setIsBlockchainOpen(!isBlockchainOpen)}
               className="flex hover:text-[#a3c2ff] cursor-pointer items-center rounded px-3 py-2 text-sm hover:text-brand text-left w-full"
             >
               Home
-            </button>
+            </Link>
             <Link
               className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand text-sm block"
               href="/agents"
