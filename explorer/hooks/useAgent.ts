@@ -104,7 +104,7 @@ export function useAgent(agentId: string) {
               const nameObj = fFields.name;
               const skillName = typeof nameObj === "string" 
                 ? nameObj 
-                : (nameObj.fields?.dummy_field || nameObj.fields?.name || nameObj.name || "unknown");
+                : (nameObj.fields?.pos0 || nameObj.fields?.dummy_field || nameObj.fields?.name || nameObj.name || "unknown");
               const walrusBlobId = fFields.value;
 
               // Mock metadata details for UI richness since only the blob ID is on-chain
