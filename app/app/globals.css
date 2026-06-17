@@ -18,13 +18,18 @@ body {
   font-family: var(--font-mono), serif;
 }
 
-h1, h2, h3, h4 { 
-  font-family: var(--font-sans); 
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-sans);
 }
 
 .primary-button {
-    background: linear-gradient(135deg, #0241ff, #6fa0ff 45%, #0241ff, #a3c2ff);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(2, 65, 255, 0.4);
+  background: linear-gradient(135deg, #0241ff, #6fa0ff 45%, #0241ff, #a3c2ff);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.28),
+    0 8px 24px rgba(2, 65, 255, 0.4);
 }
 
 .primary-text {
@@ -32,12 +37,14 @@ h1, h2, h3, h4 {
 }
 
 .secondary-button {
-    background: linear-gradient(135deg, #cfdfff, #ffffff 45%, #f4f4f4);
-    box-shadow: inset 0 1px rgba(255, 255, 255, 0.28), 0 8px 24px rgba(2, 65, 255, 0.4);
+  background: linear-gradient(135deg, #cfdfff, #ffffff 45%, #f4f4f4);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.28),
+    0 8px 24px rgba(2, 65, 255, 0.4);
 }
 
 .secondary-bg {
-    background: linear-gradient(135deg, #171717, #1563ff 45%, #0241ff);
+  background: linear-gradient(135deg, #171717, #1563ff 45%, #0241ff);
 }
 
 /* Custom scrollbar */
