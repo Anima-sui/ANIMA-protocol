@@ -4,6 +4,7 @@ import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
 import IntroducingNFA from "./components/IntroducingNFA";
 import ProblemAndSolution from "./components/ProblemAndSolution";
+import InteractiveNfaCore from "./components/InteractiveNfaCore";
 
 export default function Home() {
   return (
@@ -40,6 +41,7 @@ export default function Home() {
       <div className="relative z-0">
         <IntroducingNFA />
         <ProblemAndSolution />
+        <InteractiveNfaCore />
       </div>
 
       <Footer />
