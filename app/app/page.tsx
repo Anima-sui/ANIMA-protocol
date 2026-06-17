@@ -2,6 +2,7 @@ import PixelBlast from "./components/animations/PixelBlast";
 import Footer from "./components/Footer";
 import Hero from "./components/Hero";
 import Navbar from "./components/Navbar";
+import IntroducingNFA from "./components/IntroducingNFA";
 
 export default function Home() {
   return (
@@ -34,6 +35,8 @@ export default function Home() {
           <Hero />
         </div>
       </div>
+
+      <IntroducingNFA />
 
       <Footer />
     </div>
