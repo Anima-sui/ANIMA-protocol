@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=61.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "anima"
+version = "0.1.0"
+description = "ANIMA Agent Runtime: An autonomous AI agent on the Sui blockchain"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [
+    {name = "ANIMA Team"}
+]
+dependencies = [
+    "python-dotenv>=1.0.0",
+    "requests>=2.31.0",
+    "aiohttp>=3.9.1",
+    "numpy>=1.24.3",
+    "pandas>=2.0.3",
+    "scikit-learn>=1.3.0",
+    "python-json-logger>=2.0.7",
+]
+
+[project.scripts]
+anima = "anima:main"
+
+[tool.setuptools]
+py-modules = ["anima"]
+packages = ["src", "wallet_management"]
