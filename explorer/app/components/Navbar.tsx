@@ -130,7 +130,9 @@ const Navbar = () => {
 
             <Link
               className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand"
-              href="/coins"
+              href="https://animasui.xyz/mint"
+              target="_blank"
+              rel="noopener noreferrer"
             >
               Mint Agents{" "}
               <ExternalLink

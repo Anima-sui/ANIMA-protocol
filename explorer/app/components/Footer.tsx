@@ -4,11 +4,11 @@ import { Mail, ExternalLink } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="w-full pb-6 md:pb-12 lg:pb-14 xl:pb-16">
+    <footer className="w-full bg-black text-whitepb-6 md:pb-12 lg:pb-14 xl:pb-16">
       <div className="container mx-auto">
-        <div className="w-full border-t text-white border-[#E9E9E9] pt-6 pb-2.5 md:pt-8 md:pb-3 lg:pt-9 lg:pb-4 xl:pt-10 xl:pb-5">
+        <div className="w-full border-none text-white pt-6 pb-2.5 md:pt-8 md:pb-3 lg:pt-9 lg:pb-4 xl:pt-10 xl:pb-5">
           {/* Bottom Info Section */}
-          <div className="w-full flex justify-between font-rm text-[#6F6F6F] px-4 flex-col md:flex-row items-center gap-2 text-xs md:gap-3 md:text-sm">
+          <div className="w-full flex justify-between font-rm text-white px-4 flex-col md:flex-row items-center gap-2 text-xs md:gap-3 md:text-sm">
             <div className="flex items-center gap-2 md:gap-3 lg:gap-4">
               <Link
                 href="/"
