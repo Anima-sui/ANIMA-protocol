@@ -391,6 +391,7 @@ Usage:
   python main.py generate-address    # Generate operator address
   python main.py publish-skill       # Publish skill to Walrus
   python main.py status              # Show runtime status
+  python main.py chat                # Launch interactive wallet management chat
 
 Environment Variables:
   ANIMA_OBJECT_ID              # Sui object ID (awaiting minting)
@@ -440,6 +441,32 @@ def main():
         
         elif command == "status":
             show_status()
+            return 0
+        
+        elif command == "chat":
+            from wallet_management.chat import AnimaChat
+            from wallet_management.wallet_agent import WalletAgent
+            from wallet_management.intent_parser import IntentParser
+            
+            operator = os.getenv("OPERATOR_PUBLIC_ADDRESS")
+            if not operator:
+                try:
+                    from src.keys import KeyManager
+                    operator = KeyManager().get_operator_address()
+                except Exception:
+                    pass
+                
+            agent_id = os.getenv("ANIMA_OBJECT_ID") or "0xd4177df14064788426efb4e5e4661f98a06bc01b29df1447261454b2dd5ef0d4"
+            package_id = os.getenv("SUI_PACKAGE_ID", "0x5f6681ebeff7b6a1a1f333ba20842d47ed822f39e3ca9d06de3a69f2282e6eca")
+            
+            if not operator:
+                print("❌ Operator address not found! Run generate-address or set OPERATOR_PUBLIC_ADDRESS in .env.")
+                return 1
+                
+            wallet = WalletAgent(operator, agent_id, package_id)
+            parser = IntentParser()
+            chat = AnimaChat(wallet, parser)
+            chat.run()
             return 0
         
         else:

@@ -1,0 +1,15 @@
+Metadata-Version: 2.4
+Name: anima
+Version: 0.1.0
+Summary: ANIMA Agent Runtime: An autonomous AI agent on the Sui blockchain
+Author: ANIMA Team
+License: MIT
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+Requires-Dist: python-dotenv>=1.0.0
+Requires-Dist: requests>=2.31.0
+Requires-Dist: aiohttp>=3.9.1
+Requires-Dist: numpy>=1.24.3
+Requires-Dist: pandas>=2.0.3
+Requires-Dist: scikit-learn>=1.3.0
+Requires-Dist: python-json-logger>=2.0.7
