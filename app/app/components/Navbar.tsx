@@ -102,10 +102,10 @@ const Navbar = () => {
                 >
                   <div className="px-4 py-3 hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg">
                     <Link
-                      href="#"
+                      href="https://github.com/Anima-sui/ANIMA-protocol/blob/main/docs/LITEPAPER.md"
                       className="block text-sm font-medium text-gray-900 hover:text-[#0241ff] transition-colors"
                     >
-                      Whitepaper
+                      Litepaper
                     </Link>
                   </div>
                   <div className="px-4 py-3 hover:bg-gray-50 first:rounded-t-lg last:rounded-b-lg">
@@ -244,8 +244,8 @@ const Navbar = () => {
             <circle cx="14.5" cy="13.5" r="0.8" fill="white" />
             <circle cx="12" cy="17" r="0.8" fill="white" />
           </svg>
-          <span className="font-bold text-lg">
-            Anima <span className="text-sm font-light">Sui</span>
+          <span className="font-bold text-lg text-black">
+            Anima <span className="text-sm font-light text-gray-500">Sui</span>
           </span>
         </Link>
 
@@ -336,7 +336,7 @@ const Navbar = () => {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://x.com"
+              href="https://x.com/Animasui_xyz"
               className="px-4 py-3 text-sm font-medium hover:bg-gray-50 transition-colors border-b border-gray-200"
             >
               X (Twitter)
@@ -345,7 +345,7 @@ const Navbar = () => {
             <a
               target="_blank"
               rel="noopener noreferrer"
-              href="https://github.com"
+              href="https://github.com/Anima-sui/ANIMA-protocol"
               className="px-4 py-3 text-sm font-medium hover:bg-gray-50 transition-colors border-b border-gray-200"
             >
               GitHub
