@@ -5,6 +5,8 @@ import Navbar from "./components/Navbar";
 import IntroducingNFA from "./components/IntroducingNFA";
 import ProblemAndSolution from "./components/ProblemAndSolution";
 import InteractiveNfaCore from "./components/InteractiveNfaCore";
+import HowToUse from "./components/HowToUse";
+import CallToAction from "./components/CallToAction";
 
 export default function Home() {
   return (
@@ -42,6 +44,8 @@ export default function Home() {
         <IntroducingNFA />
         <ProblemAndSolution />
         <InteractiveNfaCore />
+        <HowToUse />
+        <CallToAction />
       </div>
 
       <Footer />
