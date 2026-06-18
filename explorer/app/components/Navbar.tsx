@@ -100,7 +100,7 @@ const Navbar = () => {
       {/* Right Side Actions */}
       <div className="ml-auto flex items-center gap-x-2 md:gap-x-3">
         {/* Connect Wallet Button - Hidden on small screens */}
-        <div className="px-4 py-3">
+        <div className="px-4 py-3 hidden md:block">
           {currentAccount ? (
             <div className="flex items-center justify-between bg-[#0241ff]/5 border border-[#0241ff]/15 rounded-full px-4 py-2 shadow-sm font-mono">
               <div className="flex items-center gap-2">
@@ -119,7 +119,7 @@ const Navbar = () => {
               </button>
             </div>
           ) : (
-            <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg" />
+            <ConnectButton className="w-full !text-white primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium transition-all hover:shadow-lg" />
           )}
         </div>
         {/* Theme Toggle Button */}
@@ -186,7 +186,7 @@ const Navbar = () => {
                   </button>
                 </div>
               ) : (
-                <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg" />
+                <ConnectButton className="w-full !text-white primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium transition-all hover:shadow-lg" />
               )}
             </div>
           </nav>
