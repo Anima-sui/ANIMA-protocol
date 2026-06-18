@@ -147,7 +147,7 @@ const Navbar = () => {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://x.com"
+                href="https://x.com/Animasui_xyz"
                 className="w-10 h-10 flex items-center justify-center relative group cursor-pointer hover:bg-gray-200 rounded-full transition-colors text-gray-700 hover:text-black"
               >
                 <svg
@@ -166,7 +166,7 @@ const Navbar = () => {
               <Link
                 target="_blank"
                 rel="noopener noreferrer"
-                href="https://github.com"
+                href="https://github.com/Anima-sui/ANIMA-protocol"
                 className="w-10 h-10 flex items-center justify-center relative group cursor-pointer hover:bg-gray-200 rounded-full transition-colors text-gray-700 hover:text-black"
               >
                 <svg
@@ -296,10 +296,10 @@ const Navbar = () => {
                     }}
                     className="block px-6 py-2 text-sm text-gray-700 hover:text-[#0241ff] transition-colors"
                   >
-                    Whitepaper
+                    Litepaper
                   </Link>
                   <Link
-                    href="#"
+                    href="https://github.com/Anima-sui/ANIMA-protocol/blob/main/docs/LITEPAPER.md"
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       setIsAboutOpen(false);

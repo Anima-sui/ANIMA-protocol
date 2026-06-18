@@ -190,7 +190,7 @@ export default function Footer() {
           {/* Social Icons */}
           <div className="flex items-center gap-4 text-white">
             <a
-              href="https://x.com/AnimaSui"
+              href="https://x.com/Animasui_xyz"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-black transition-colors"
