@@ -244,6 +244,9 @@ const Navbar = () => {
             <circle cx="14.5" cy="13.5" r="0.8" fill="white" />
             <circle cx="12" cy="17" r="0.8" fill="white" />
           </svg>
+          <span className="font-bold text-lg">
+            Anima <span className="text-sm font-light">Sui</span>
+          </span>
         </Link>
 
         {/* Mobile Menu Button */}

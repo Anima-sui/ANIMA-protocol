@@ -1,13 +1,19 @@
 "use client";
 
 import React, { useState } from "react";
-import { ExternalLink, Menu, Wifi } from "lucide-react";
+import { ExternalLink, LogOut, Menu, Wifi } from "lucide-react";
 import Link from "next/link";
-import { ConnectButton } from "@mysten/dapp-kit";
+import {
+  ConnectButton,
+  useCurrentAccount,
+  useDisconnectWallet,
+} from "@mysten/dapp-kit";
 
 const Navbar = () => {
   const [isBlockchainOpen, setIsBlockchainOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const currentAccount = useCurrentAccount();
+  const { mutate: disconnect } = useDisconnectWallet();
 
   return (
     <header
@@ -79,7 +85,9 @@ const Navbar = () => {
         {/* Mint Agents Link */}
         <Link
           className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand"
-          href="/coins"
+          href="https://animasui.xyz/mint"
+          target="_blank"
+          rel="noopener noreferrer"
         >
           Mint Agents{" "}
           <ExternalLink
@@ -92,8 +100,28 @@ const Navbar = () => {
       {/* Right Side Actions */}
       <div className="ml-auto flex items-center gap-x-2 md:gap-x-3">
         {/* Connect Wallet Button - Hidden on small screens */}
-        <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium !text-white transition-all hover:shadow-lg mt-2" />
-
+        <div className="px-4 py-3">
+          {currentAccount ? (
+            <div className="flex items-center justify-between bg-[#0241ff]/5 border border-[#0241ff]/15 rounded-full px-4 py-2 shadow-sm font-mono">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs text-[#0241ff] font-medium">
+                  {currentAccount.address.slice(0, 6)}...
+                  {currentAccount.address.slice(-4)}
+                </span>
+              </div>
+              <button
+                onClick={() => disconnect()}
+                className="p-1.5 hover:bg-[#0241ff]/10 rounded-full text-zinc-400 hover:text-red-500 transition-all cursor-pointer"
+                title="Disconnect Wallet"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg" />
+          )}
+        </div>
         {/* Theme Toggle Button */}
         <div className="pointer-events-auto flex items-center gap-x-1 bg-[#6fa0ff]/15 px-4 py-2 rounded-full">
           <Wifi className="inline-block text-green-400 h-4 w-4" /> Testnet
@@ -127,7 +155,6 @@ const Navbar = () => {
             >
               Agents {`(NFAs)`}
             </Link>
-
             <Link
               className="rounded hover:text-[#a3c2ff] px-3 py-2 hover:text-brand"
               href="https://animasui.xyz/mint"
@@ -140,8 +167,28 @@ const Navbar = () => {
                 size={14}
               />
             </Link>
-
-            <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 !rounded-full cursor-pointer hover:scale-95 px-5 py-3 text-sm font-medium !text-white transition-all hover:shadow-lg mt-2" />
+            <div className="px-4 py-3">
+              {currentAccount ? (
+                <div className="flex items-center justify-between bg-[#0241ff]/5 border border-[#0241ff]/15 rounded-full px-4 py-2 shadow-sm font-mono">
+                  <div className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="text-xs text-[#0241ff] font-medium">
+                      {currentAccount.address.slice(0, 6)}...
+                      {currentAccount.address.slice(-4)}
+                    </span>
+                  </div>
+                  <button
+                    onClick={() => disconnect()}
+                    className="p-1.5 hover:bg-[#0241ff]/10 rounded-full text-zinc-400 hover:text-red-500 transition-all cursor-pointer"
+                    title="Disconnect Wallet"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </div>
+              ) : (
+                <ConnectButton className="w-full primary-button inline-flex items-center justify-center gap-2 rounded-full cursor-pointer hover:scale-95 px-4 py-2 text-sm font-medium text-white transition-all hover:shadow-lg" />
+              )}
+            </div>
           </nav>
         </div>
       )}
