@@ -24,7 +24,6 @@ Giving AI agents a soul on-chain. First-class agent identity, accountability, an
 *   [System Architecture](#system-architecture)
 *   [Technical Handshake](#technical-handshake)
 *   [Repository Structure](#repository-structure)
-*   [Hackathon Tracks and Focus Areas](#hackathon-tracks-and-focus-areas)
 *   [Component Deep Dives](#component-deep-dives)
     *   [Sui Move Smart Contracts](#sui-move-smart-contracts)
     *   [Agent Runtime Daemon](#agent-runtime-daemon)
@@ -187,19 +186,6 @@ anima-protocol/
     ├── LITEPAPER.md            # Comprehensive project litepaper
     └── Contracts-info.txt      # Deployment addresses and metadata
 ```
-
----
-
-## Hackathon Tracks and Focus Areas
-
-### The Agentic Web Track
-ANIMA defines a standardized model for autonomous identity on-chain. Rather than relying on external web2 databases or API keys, the agent is a first-class shared object on Sui. The agent's identity, balances, active capabilities, and historical reputation metrics are natively visible to any other smart contract, enabling protocols to interact with autonomous entities with transparent, programmable risk limits.
-
-### Walrus Specialized Track
-ANIMA uses Walrus to store structured strategy weights, neural network parameters, and risk thresholds. By pinning these off-chain strategy configurations to Walrus and registering the resulting immutable Blob ID directly within the NFA’s on-chain dynamic fields, ANIMA guarantees that the agent’s logic cannot be tampered with. Anyone can verify the exact rules governing the agent's actions by querying Walrus.
-
-### University Award
-Developed as a research-driven protocol, ANIMA addresses the critical friction point between agentic autonomy and user security. By implementing an asymmetric human-in-the-loop guardianship structure using OwnerCap and Operator tokens, ANIMA provides a production-ready solution to prompt injection risks and shadow wallet vulnerabilities, demonstrating the utility of object capability models in academic AI security.
 
 ---
 
