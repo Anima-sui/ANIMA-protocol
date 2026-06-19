@@ -26,7 +26,7 @@ function ConnectBtn() {
       <div className="flex items-center gap-2.5 bg-[#0241ff] border border-[#0241ff]/15 rounded-full px-4 py-1.5 shadow-sm font-mono shrink-0">
         {/* Pulsing connected indicator */}
         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0" />
-        <span className="text-xs text-white font-medium select-all">
+        <span className="text-lg text-white! font-medium select-all">
           {currentAccount.address.slice(0, 6)}...
           {currentAccount.address.slice(-4)}
         </span>

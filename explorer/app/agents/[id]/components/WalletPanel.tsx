@@ -1,8 +1,20 @@
 "use client";
 
 import React, { useState } from "react";
-import { Wallet, TrendingUp, RefreshCw, X, Coins, Check, Loader2 } from "lucide-react";
-import { useCurrentAccount, useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import {
+  Wallet,
+  TrendingUp,
+  RefreshCw,
+  X,
+  Coins,
+  Check,
+  Loader2,
+} from "lucide-react";
+import {
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+  useSuiClient,
+} from "@mysten/dapp-kit";
 import { Transaction } from "@mysten/sui/transactions";
 import { PACKAGE_ID } from "../../../../lib/constants";
 import { supabase } from "@/lib/supabase";
@@ -30,7 +42,8 @@ export default function WalletPanel({
 
   const currentAccount = useCurrentAccount();
   const suiClient = useSuiClient();
-  const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction();
+  const { mutateAsync: signAndExecuteTransaction } =
+    useSignAndExecuteTransaction();
 
   const handleDeposit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,25 +58,22 @@ export default function WalletPanel({
 
     try {
       const tx = new Transaction();
-      
+
       // Calculate MIST (1 SUI = 1,000,000,000 MIST)
       const amountInMist = BigInt(Math.floor(amount * 1_000_000_000));
-      
+
       // Split the amount from gas coin
       const [splitCoin] = tx.splitCoins(tx.gas, [tx.pure.u64(amountInMist)]);
-      
+
       // Call wallet::deposit_funds
       tx.moveCall({
         target: `${PACKAGE_ID}::wallet::deposit_funds`,
-        arguments: [
-          tx.object(agentObjectId),
-          splitCoin,
-        ],
+        arguments: [tx.object(agentObjectId), splitCoin],
       });
 
       const response = await signAndExecuteTransaction({ transaction: tx });
       await suiClient.waitForTransaction({ digest: response.digest });
-      
+
       // Log the deposit action in Supabase
       try {
         await supabase.from("agent_actions").insert({
@@ -148,7 +158,10 @@ export default function WalletPanel({
             <TrendingUp size={11} className="text-emerald-400" /> Total Volume
           </span>
           <span className="text-base font-bold text-background font-mono">
-            {totalVolumeSui.toLocaleString(undefined, { maximumFractionDigits: 4 })} SUI
+            {totalVolumeSui.toLocaleString(undefined, {
+              maximumFractionDigits: 4,
+            })}{" "}
+            SUI
           </span>
         </div>
 
@@ -169,16 +182,18 @@ export default function WalletPanel({
       {/* Fund Agent Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="glass-card max-w-md w-full p-6 border-blue-500/30 flex flex-col gap-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)] animate-fadeIn">
-            
+          <div className="glass-card !bg-white max-w-md w-full p-6 border-blue-500/30 flex flex-col gap-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)] animate-fadeIn">
             {isSuccess ? (
               <div className="flex flex-col items-center justify-center py-6 text-center gap-3 animate-fadeIn">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
                   <Check size={24} />
                 </div>
-                <h3 className="font-bold text-base text-background">Deposit Successful!</h3>
+                <h3 className="font-bold text-base text-background">
+                  Deposit Successful!
+                </h3>
                 <p className="text-xs text-gray-400 max-w-xs leading-relaxed mt-1">
-                  Successfully deposited {depositAmount} SUI into the agent vault. The new balance will reflect shortly.
+                  Successfully deposited {depositAmount} SUI into the agent
+                  vault. The new balance will reflect shortly.
                 </p>
                 <button
                   onClick={() => {
@@ -237,7 +252,9 @@ export default function WalletPanel({
                       </span>
                     </div>
                     <p className="text-[10px] text-gray-500 leading-relaxed mt-1">
-                      This transaction will extract SUI from your connected wallet and deposit it directly into the agent's internal vault balance.
+                      This transaction will extract SUI from your connected
+                      wallet and deposit it directly into the agent's internal
+                      vault balance.
                     </p>
                   </div>
 
@@ -248,7 +265,7 @@ export default function WalletPanel({
                         setIsModalOpen(false);
                         setErrorMessage("");
                       }}
-                      className="flex-1 py-2.5 rounded-lg border border-white/10 hover:bg-white/5 font-semibold text-xs text-background transition-colors cursor-pointer"
+                      className="flex-1 py-2.5 rounded-lg border border-black/10 hover:bg-white/70 font-semibold text-xs text-background transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>

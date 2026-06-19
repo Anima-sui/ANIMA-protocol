@@ -31,7 +31,9 @@ export default function KillSwitch({
       setIsSuccess(true);
     } catch (err: any) {
       console.error("Emergency kill failed:", err);
-      setErrorMessage(err.message || "Failed to trigger emergency kill switch.");
+      setErrorMessage(
+        err.message || "Failed to trigger emergency kill switch.",
+      );
     } finally {
       setIsExecutingLocal(false);
     }
@@ -61,7 +63,8 @@ export default function KillSwitch({
               <span className="font-semibold text-background block mb-0.5">
                 Agent is Paused
               </span>
-              The emergency hatch has already been triggered. The agent is paused on-chain, and all vault funds have been drained.
+              The emergency hatch has already been triggered. The agent is
+              paused on-chain, and all vault funds have been drained.
             </div>
           </div>
 
@@ -108,16 +111,18 @@ export default function KillSwitch({
       {/* Confirmation & Success Modal */}
       {isOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
-          <div className="glass-card max-w-md w-full p-6 border-red-500/30 flex flex-col gap-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
-            
+          <div className="glass-card bg-white! max-w-md w-full p-6 border-red-500/30 flex flex-col gap-6 shadow-[0_12px_40px_rgba(0,0,0,0.5)]">
             {isSuccess ? (
               <div className="flex flex-col items-center justify-center py-6 text-center gap-3 animate-fadeIn">
                 <div className="w-12 h-12 rounded-full bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
                   <Check size={24} />
                 </div>
-                <h3 className="font-bold text-base text-background">Emergency Kill Executed</h3>
+                <h3 className="font-bold text-base text-background">
+                  Emergency Kill Executed
+                </h3>
                 <p className="text-xs text-gray-400 max-w-xs leading-relaxed mt-1">
-                  The agent has been permanently paused on-chain, and all remaining vault funds have been drained back to your wallet.
+                  The agent has been permanently paused on-chain, and all
+                  remaining vault funds have been drained back to your wallet.
                 </p>
                 <button
                   onClick={() => {
@@ -154,8 +159,8 @@ export default function KillSwitch({
 
                 <div className="text-xs text-gray-300 flex flex-col gap-3 leading-relaxed">
                   <p>
-                    Triggering the emergency hatch is an **irreversible operation**
-                    for the active agent lifecycle:
+                    Triggering the emergency hatch is an **irreversible
+                    operation** for the active agent lifecycle:
                   </p>
                   <ul className="list-disc pl-5 flex flex-col gap-1.5 text-gray-400">
                     <li>
@@ -185,7 +190,7 @@ export default function KillSwitch({
                     type="button"
                     onClick={() => setIsOpen(false)}
                     disabled={activeExecuting}
-                    className="flex-1 py-2.5 rounded-lg border border-white/10 hover:bg-white/5 font-semibold text-xs text-background transition-colors cursor-pointer disabled:opacity-50"
+                    className="flex-1 py-2.5 rounded-lg border border-black hover:bg-white/70 font-semibold text-xs text-background transition-colors cursor-pointer disabled:opacity-50"
                   >
                     Cancel
                   </button>

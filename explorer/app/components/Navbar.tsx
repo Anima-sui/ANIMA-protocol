@@ -105,7 +105,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between bg-[#0241ff]/5 border border-[#0241ff]/15 rounded-full px-4 py-2 shadow-sm font-mono">
               <div className="flex items-center gap-2">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-xs text-[#0241ff] font-medium">
+                <span className="text-xs text-white font-medium">
                   {currentAccount.address.slice(0, 6)}...
                   {currentAccount.address.slice(-4)}
                 </span>
@@ -172,7 +172,7 @@ const Navbar = () => {
                 <div className="flex items-center justify-between bg-[#0241ff]/5 border border-[#0241ff]/15 rounded-full px-4 py-2 shadow-sm font-mono">
                   <div className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-xs text-[#0241ff] font-medium">
+                    <span className="text-xs text-whiite font-medium">
                       {currentAccount.address.slice(0, 6)}...
                       {currentAccount.address.slice(-4)}
                     </span>

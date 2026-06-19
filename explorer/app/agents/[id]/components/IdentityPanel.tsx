@@ -46,12 +46,12 @@ export default function IdentityPanel({
           <span className="text-gray-400 flex items-center gap-1">
             <Sparkles size={14} className="text-[#6fa0ff]" /> Reputation Score
           </span>
-          <span className="text-background">{reputationScore} / 200</span>
+          <span className="text-background">{reputationScore / 2} / 100</span>
         </div>
         <div className="w-full h-2.5 bg-white/5 rounded-full overflow-hidden border border-white/5">
           <div
             className="h-full bg-gradient-to-r from-[#0241ff] to-[#6fa0ff] rounded-full transition-all duration-500"
-            style={{ width: `${repPercentage}%` }}
+            style={{ width: `${repPercentage / 2}%` }}
           />
         </div>
         <p className="text-[11px] text-gray-500 leading-relaxed">
@@ -121,9 +121,9 @@ export default function IdentityPanel({
         </div>
       </div>
 
-      <div className="mt-auto pt-3 border-t border-white/5 flex justify-between text-xs text-gray-400">
+      <div className="mt-auto pt-3 border-t border-white/5 flex justify-between text-xs text-gray-500">
         <span>Genesis Epoch</span>
-        <span className="font-mono text-gray-200">{createdEpoch}</span>
+        <span className="font-mono text-gray-500">{createdEpoch}</span>
       </div>
     </div>
   );
