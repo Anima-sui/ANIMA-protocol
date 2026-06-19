@@ -2,8 +2,16 @@
 
 Giving AI agents a soul on-chain. First-class agent identity, accountability, and autonomy on Sui.
 
+[![Sui](https://img.shields.io/badge/Built%20on-Sui-4CA3DD?style=for-the-badge&logo=sui)](https://sui.io)
+[![Walrus](https://img.shields.io/badge/Storage-Walrus-FF6B35?style=for-the-badge&logo=walrus)](https://walrus.xyz)
+[![Hackathon](https://img.shields.io/badge/Sui%20Overflow-2026-blueviolet?style=for-the-badge)](https://sui.io/overflow)
+[![Track](https://img.shields.io/badge/Track-Agentic%20Web-green?style=for-the-badge)]()
+[![University](https://img.shields.io/badge/Award-University-gold?style=for-the-badge)]()
+
 *   **Sui Network Package ID:** [0x5f6681ebeff7b6a1a1f333ba20842d47ed822f39e3ca9d06de3a69f2282e6eca](file:///C:/Users/PC/desktop/coding/anima-protocol/docs/Contracts-info.txt)
-*   **Sui Overflow 2026 Submission:** Agentic Web Track, Walrus Specialized Track, and University Award
+
+
+
 
 ---
 
@@ -16,7 +24,6 @@ Giving AI agents a soul on-chain. First-class agent identity, accountability, an
 *   [System Architecture](#system-architecture)
 *   [Technical Handshake](#technical-handshake)
 *   [Repository Structure](#repository-structure)
-*   [Hackathon Tracks and Focus Areas](#hackathon-tracks-and-focus-areas)
 *   [Component Deep Dives](#component-deep-dives)
     *   [Sui Move Smart Contracts](#sui-move-smart-contracts)
     *   [Agent Runtime Daemon](#agent-runtime-daemon)
@@ -182,19 +189,6 @@ anima-protocol/
 
 ---
 
-## Hackathon Tracks and Focus Areas
-
-### The Agentic Web Track
-ANIMA defines a standardized model for autonomous identity on-chain. Rather than relying on external web2 databases or API keys, the agent is a first-class shared object on Sui. The agent's identity, balances, active capabilities, and historical reputation metrics are natively visible to any other smart contract, enabling protocols to interact with autonomous entities with transparent, programmable risk limits.
-
-### Walrus Specialized Track
-ANIMA uses Walrus to store structured strategy weights, neural network parameters, and risk thresholds. By pinning these off-chain strategy configurations to Walrus and registering the resulting immutable Blob ID directly within the NFA’s on-chain dynamic fields, ANIMA guarantees that the agent’s logic cannot be tampered with. Anyone can verify the exact rules governing the agent's actions by querying Walrus.
-
-### University Award
-Developed as a research-driven protocol, ANIMA addresses the critical friction point between agentic autonomy and user security. By implementing an asymmetric human-in-the-loop guardianship structure using OwnerCap and Operator tokens, ANIMA provides a production-ready solution to prompt injection risks and shadow wallet vulnerabilities, demonstrating the utility of object capability models in academic AI security.
-
----
-
 ## Component Deep Dives
 
 ### Sui Move Smart Contracts
@@ -305,5 +299,9 @@ Human-controlled NFA creation, programmatic hot-wallet gas seeding, dynamic Walr
 *   **Skill Marketplace:** A platform where developers can sell pre-compiled, audited strategy configs (Walrus Blob IDs) directly to NFA owners.
 
 ### V3: Sovereign Machine Economies
-*   **Self-Minting Agents:** Upgrading agents with capabilities to programmatically mint new sub-NFAs to delegate work.
+*   **Self-Minting Agents - INFAs (Intelligent Non-Fungible Agents) :** Upgrading agents with capabilities to programmatically mint new sub-NFAs to delegate work.
 *   **Inter-Agent Contracts:** Enabling NFAs to contract work to other NFAs on-chain, paying in SUI from their sovereign vaults, creating decentralized agent organizations.
+*   
+
+
+Sui Overflow 2026 — Agentic Web Track + Walrus Specialized Track + University Award Team: Joshua · Ademola · Ezekiel
