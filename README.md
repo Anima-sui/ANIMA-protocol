@@ -1,666 +1,309 @@
-# ANIMA — Agent Native Identity & Machine Autonomy
+# ANIMA: Agent Native Identity & Machine Autonomy
 
-> _Giving AI agents a soul on-chain. First-class agent identity, accountability, and autonomy on Sui._
+Giving AI agents a soul on-chain. First-class agent identity, accountability, and autonomy on Sui.
 
-[![Sui](https://img.shields.io/badge/Built%20on-Sui-4CA3DD?style=flat-square)](https://sui.io)
-[![Walrus](https://img.shields.io/badge/Storage-Walrus-FF6B35?style=flat-square)](https://walrus.xyz)
-[![Hackathon](https://img.shields.io/badge/Sui%20Overflow-2026-blueviolet?style=flat-square)](https://sui.io/overflow)
-[![Track](https://img.shields.io/badge/Track-Agentic%20Web-green?style=flat-square)]()
-[![University](https://img.shields.io/badge/Award-University-gold?style=flat-square)]()
+*   **Sui Network Package ID:** [0x5f6681ebeff7b6a1a1f333ba20842d47ed822f39e3ca9d06de3a69f2282e6eca](file:///C:/Users/PC/desktop/coding/anima-protocol/docs/Contracts-info.txt)
+*   **Sui Overflow 2026 Submission:** Agentic Web Track, Walrus Specialized Track, and University Award
 
 ---
 
 ## Table of Contents
 
-- [What is ANIMA?](#what-is-anima)
-- [The Problem](#the-problem)
-- [The Solution](#the-solution)
-- [System Architecture](#system-architecture)
-- [Repository Structure](#repository-structure)
-- [Team & Ownership](#team--ownership)
-- [Development Plan — 27 Days](#development-plan--27-days)
-  - [Phase 1: Foundation (Days 1–7)](#phase-1-foundation-days-17)
-  - [Phase 2: Core Build (Days 8–18)](#phase-2-core-build-days-818)
-  - [Phase 3: Integration (Days 19–23)](#phase-3-integration-days-1923)
-  - [Phase 4: Polish & Demo (Days 24–27)](#phase-4-polish--demo-days-2427)
-- [Component Deep Dives](#component-deep-dives)
-  - [Contracts — Joshua](#contracts--joshua)
-  - [Agent Runtime — Ezekiel](#agent-runtime--ezekiel)
-  - [Backend — Ademola](#backend--ademola)
-  - [Explorer — Joshua](#explorer--joshua)
-- [Demo Loop](#demo-loop)
-- [Demo Day Checklist](#demo-day-checklist)
-- [Tech Stack](#tech-stack)
-- [Roadmap Beyond Hackathon](#roadmap-beyond-hackathon)
+*   [What is ANIMA](#what-is-anima)
+*   [The Problem Space](#the-problem-space)
+*   [The Solution: Non-Fungible Agents](#the-solution-non-fungible-agents)
+*   [Comparison: NFT vs. NFA](#comparison-nft-vs-nfa)
+*   [System Architecture](#system-architecture)
+*   [Technical Handshake](#technical-handshake)
+*   [Repository Structure](#repository-structure)
+*   [Hackathon Tracks and Focus Areas](#hackathon-tracks-and-focus-areas)
+*   [Component Deep Dives](#component-deep-dives)
+    *   [Sui Move Smart Contracts](#sui-move-smart-contracts)
+    *   [Agent Runtime Daemon](#agent-runtime-daemon)
+    *   [Backend and Execution Layer](#backend-and-execution-layer)
+    *   [Next.js Explorer Console](#next-js-explorer-console)
+*   [Demonstration Sequence](#demonstration-sequence)
+*   [Demonstration Day Checklist](#demonstration-day-checklist)
+*   [Screenshots and Console Telemetry](#screenshots-and-console-telemetry)
+*   [Meet the Team](#meet-the-team)
+*   [Technology Stack](#technology-stack)
+*   [Roadmap Beyond the Hackathon](#roadmap-beyond-the-hackathon)
 
 ---
 
-## What is ANIMA?
+## What is ANIMA
 
-ANIMA is a native agent identity and autonomy protocol built on Sui. It allows humans to mint AI agents as **Non-Fungible Agents (NFAs)** — unique on-chain objects with their own sovereign wallet, skill registry, and immutable action history.
+ANIMA is a native agent identity and autonomy protocol built on Sui. It allows developers and users to mint autonomous AI agents as Non-Fungible Agents (NFAs) — unique, on-chain shared objects possessing their own self-sovereign balance pool, modular skill registry, and verifiable action history. 
 
-Agents reason and act off-chain, but every economic decision they execute is logged on-chain against their ANIMA identity — creating the first verifiable, accountable, autonomous agent layer on Sui.
-
----
-
-## The Problem
-
-AI agents are increasingly acting in crypto — trading, paying, executing. But today they are **stateless, unaccountable, and invisible**:
-
-- Agents borrow human wallets — there is no agent identity
-- When an agent acts, you cannot verify what agent did it, who owns it, or what it is authorized to do
-- Protocols cannot trust agents they cannot identify
-- DAOs cannot delegate to agents they cannot audit
-- There is no kill switch — if an agent goes rogue, funds are gone
-
-**There is no identity, accountability, or autonomy layer for agents on-chain today.**
+Agents analyze data and make decisions off-chain. However, every economic action they execute is validated against their on-chain NFA identity and dynamically verified, establishing the first secure, accountable, and auditable execution layer for autonomous machines.
 
 ---
 
-## The Solution
+## The Problem Space
 
-ANIMA gives agents first-class citizenship on Sui. Each agent is minted as a unique ANIMA object containing:
+Autonomous AI agents are active in Web3 today, executing trades, managing liquidity, and interacting with protocols. However, the current architecture suffers from critical limitations:
 
-- A **sovereign wallet** — completely independent from the human's wallet
-- A **skill registry** — dynamic fields defining what the agent is authorized to do
-- An **action history** — immutable log of every on-chain action, emitted as Sui events
-- An **operational mode** — Normal (agent is live) or Paused (emergency kill switch triggered)
-- A **reputation score** — derived from action history, updated on every execution
+*   **The Shadow Wallet Vulnerability:** Traditional bots use standard private keys stored locally or on cloud servers. There is no architectural boundary between the agent and the keys. If the runtime is compromised via a prompt injection or code loop, the entire balance is permanently drained.
+*   **Total Identity Opaqueness:** Smart contracts and DeFi protocols cannot identify the entity signing a transaction. A signature from a random key could originate from a human, a simple cron-job script, or a highly sophisticated neural network. This prevents protocols from offering risk-adjusted rates or reputation-gated access for machine signers.
+*   **Zero Persistent Auditing:** Standard blockchain accounts do not preserve configuration or strategy history. There is no verifiable linkage between the off-chain reason (model parameters, strategy boundaries) and the on-chain trade, rendering post-incident debugging impossible.
 
-The human is a **guardian, not a controller.** During normal operation the human cannot touch the agent wallet. In an emergency they can trigger the kill switch, pause the agent, and drain funds back to their address.
+---
 
-> _Just like a human trader watches charts off-chain but the moment he executes a trade it logs on-chain — an ANIMA agent lives off-chain but acts on-chain with a verified identity._
+## The Solution: Non-Fungible Agents
+
+ANIMA gives agents first-class citizenship on Sui. Each agent is instantiated as a unique on-chain container containing:
+
+*   **Sovereign Balance Pool:** A dedicated asset vault owned directly by the agent object, isolated from the owner's personal keys.
+*   **Extensible Skill Registry:** A system of dynamic fields linking authorized agent behaviors directly to content-addressed strategy parameters stored on Walrus.
+*   **Accountability Trail:** A structured ledger of every execution, emitted on-chain via Sui events and logged to a public explorer database.
+*   **Programmatic Guardianship:** An asymmetric capability design where a human owner holds an OwnerCap, enabling them to pause the agent and drain the vault during emergencies, while the agent executes daily tasks autonomously.
+
+---
+
+## Comparison: NFT vs. NFA
+
+| Dimension | Non-Fungible Tokens (NFT) | Non-Fungible Agents (NFA) |
+| :--- | :--- | :--- |
+| **Core Identity** | Points to static metadata, images, or media files stored in IPFS or web2 URLs. | Represents a live on-chain agent. Binds a custom name, reputation score, and active operational state. |
+| **Asset Sovereign Vault** | Is itself a passive asset owned by a human wallet. Cannot hold or manage external tokens. | Encapsulates a sovereign inner balance pool. Can receive, hold, and deploy SUI and whitelisted tokens autonomously. |
+| **Behavior and Logic** | No execution capabilities. Relies completely on external smart contracts or wallets to move it. | Hooks into a decentralized Skill Registry holding Walrus Blob IDs with dynamic, modular code structures. |
+| **Execution Model** | Cannot initiate transactions. Operations are limited to standard manual transfers or listings. | Binds an off-chain Hot-Wallet operator address, executing transaction blocks via cryptographic delegation. |
 
 ---
 
 ## System Architecture
 
+The following diagram illustrates the structural layout of the ANIMA protocol:
+
+```mermaid
+graph TD
+    classDef contract fill:#0241ff,stroke:#000,stroke-width:1px,color:#fff;
+    classDef runtime fill:#4caf50,stroke:#000,stroke-width:1px,color:#fff;
+    classDef storage fill:#ff6b35,stroke:#000,stroke-width:1px,color:#fff;
+    classDef human fill:#9c27b0,stroke:#000,stroke-width:1px,color:#fff;
+
+    Guardian["Guardian Account (Human)"]:::human -->|Holds OwnerCap| OwnerCap["OwnerCap Object"]:::human
+    Guardian -->|Seeds Gas| Operator["Operator Hot Wallet"]:::runtime
+    
+    Operator -->|Signs and Submits Transaction| PTB["Sui Programmable Transaction Block (PTB)"]:::contract
+    
+    subgraph Sui Blockchain
+        PTB -->|Calls Move Contract| ANIMA["ANIMA NFA Object (Shared)"]:::contract
+        ANIMA -->|Encapsulates| Vault["Sovereign Balance Pool"]:::contract
+        ANIMA -->|Dynamic Field| SkillRegistry["Skill Registry"]:::contract
+    end
+
+    subgraph Decentralized Storage
+        SkillRegistry -->|References Blob ID| Walrus["Walrus Storage (skill-config.json)"]:::storage
+    end
+
+    PTB -->|Executes Action| Target["Target Protocol (DeFi Swap/Transfer)"]:::contract
+
+    class Guardian,OwnerCap human;
+    class Operator runtime;
+    class ANIMA,Vault,SkillRegistry,PTB,Target contract;
+    class Walrus storage;
 ```
-       ┌──────────────────────────────────────────────────────────────┐
-       │                HUMAN GUARDIAN COMPONENT                      │
-       │                                                              │
-       │    ┌──────────────────┐         Emergency Kill Switch        │
-       │    │  OwnerCap Object ├───────────────────────────────────┐  │
-       │    └──────────────────┘                                   │  │
-       └───────────────────────────────────────────────────────────┼──┘
-                                                                   │
- ┌─────────────────────────────────────────────────────────────────┼──────┐
- │                      OFF-CHAIN AGENT RUNTIME                    │      │
- │                                                                 │      │
- │  ┌─────────────────────┐   V1 SUI Settlement   ┌───────────────▼────┐  │
- │  │    Data Engine      │◄──────────────────────┤  Backend Compute   │  │
- │  │ (Python/TS Predict) │  (Periodic Transfers) │   Tracking Layer   │  │
- │  └──────────┬──────────┘                       └────────────────────┘  │
- │             │ Trigger                                                   │
- │             ▼                                                           │
- │  ┌─────────────────────┐       Read Skills                              │
- │  │  Agent Orchestrator ├──────────────────────────┐                     │
- │  └──────────┬──────────┘                          │                     │
- └─────────────┼─────────────────────────────────────┼─────────────────────┘
-               │                                     │
-               │ Submits PTB                         │ Fetches from Walrus
-               ▼                                     ▼
- ┌──────────────────────────────────────────┐  ┌──────────────────┐
- │               ON-CHAIN SUI               │  │      WALRUS      │
- │                                          │  │  (Skill Storage) │
- │  ┌────────────────────────────────────┐  │  │                  │
- │  │      ANIMA Identity Object         │  │  │  ┌────────────┐  │
- │  │  ┌──────────────────────────────┐  │  │  │  │ Skill JSON │  │
- │  │  │ Skill Registry (Dyn Fields)  ├──┼──┼─►│  │ & Weights  │  │
- │  │  └──────────────────────────────┘  │  │  │  └────────────┘  │
- │  │  ┌──────────────────────────────┐  │  │  └──────────────────┘
- │  │  │ Sovereign Agent Wallet       │  │  │
- │  │  └──────────────────────────────┘  │  │  ┌──────────────────┐
- │  │  ┌──────────────────────────────┐  │  │  │  ANIMA EXPLORER  │
- │  │  │ Operational Mode             │  │  │  │                  │
- │  │  │ (Normal / PAUSED)            │  │  │  │  Live event log  │
- │  │  └──────────────────────────────┘  │  │  │  Agent dashboard │
- │  │  ┌──────────────────────────────┐  │  │  │  Kill switch UI  │
- │  │  │ Reputation Score             │  │  │  └──────────────────┘
- │  │  └──────────────────────────────┘  │  │
- │  └────────────────────────────────────┘  │
- └──────────────────────────────────────────┘
+
+---
+
+## Technical Handshake
+
+The communication loop between the human guardian, the off-chain runtime, Walrus, and the Sui blockchain is structured as follows:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant Guardian as Guardian (OwnerCap)
+    participant NFA as ANIMA NFA (Sui Object)
+    participant Operator as Operator (Hot Wallet)
+    participant Walrus as Walrus Blob Storage
+    participant Target as Target DeFi Protocol
+
+    Note over Guardian, NFA: Setup Phase
+    Guardian->>NFA: Mint NFA (with Operator address)
+    Guardian->>Walrus: Store skill-config.json (limits, strategy)
+    Guardian->>NFA: Authorize Skill (adds Walrus Blob ID)
+    Guardian->>NFA: Deposit SUI into Vault
+
+    Note over Operator, Target: Execution Phase
+    Operator->>NFA: Fetch active skills & Walrus Blob ID
+    Operator->>Walrus: Retrieve skill-config.json
+    Note over Operator: Monitor market data<br/>Evaluate model strategy
+    Operator->>NFA: Call extract_funds_for_action(amount)
+    Note over NFA: Assert sender == Operator<br/>Assert not paused<br/>Increment reputation<br/>Emit AgentActionExecuted
+    NFA-->>Operator: Return Coin SUI resource
+    Operator->>Target: Execute swap/transfer with returned Coin
 ```
 
 ---
 
 ## Repository Structure
 
+The project codebase is organized into modular directories representing the distinct layers of the architecture:
+
 ```
 anima-protocol/
-│
-├── contracts/                  # Sui Move smart contracts (Joshua)
+├── contracts/                  # Sui Move Smart Contracts
 │   ├── sources/
-│   │   ├── anima.move          # Core ANIMA identity object
-│   │   ├── skill_registry.move # Dynamic field skill management
-│   │   ├── wallet.move         # Sovereign wallet logic
-│   │   └── events.move         # All emitted event structs
-│   ├── tests/
-│   │   └── anima_tests.move
+│   │   ├── protocol.move       # Core ANIMA identity struct and capabilities
+│   │   ├── skill_registry.move # Dynamic field skill registry logic
+│   │   ├── wallet.move         # Sovereign vault deposit and extraction paths
+│   │   └── events.move         # Emitted telemetry event types
+│   ├── tests/                  # Contract unit tests
 │   └── Move.toml
 │
-├── agent-runtime/              # Off-chain agent intelligence (Ezekiel)
+├── agent-runtime/              # Off-chain Python Daemon (Ezekiel)
 │   ├── src/
-│   │   ├── monitor.py          # Price monitoring loop
-│   │   ├── predictor.py        # ML prediction model
-│   │   ├── orchestrator.py     # Decision engine
-│   │   └── walrus_client.py    # Walrus fetch/upload logic
-│   ├── models/                 # Trained model weights
-│   ├── config/
-│   │   └── skill_schema.json   # Walrus skill config schema
+│   │   ├── orchestrator.py     # Decision engine and PTB builder
+│   │   └── walrus_client.py    # Walrus retrieval implementation
+│   ├── main.py                 # Daemon entry point and gas seeding loop
 │   └── requirements.txt
 │
-├── backend/                    # API + PTB execution layer (Ademola)
-│   ├── src/
-│   │   ├── index.ts            # Entry point
-│   │   ├── ptb/
-│   │   │   └── executor.ts     # PTB builder and submitter
-│   │   ├── deepbook/
-│   │   │   └── swap.ts         # DeepBook integration
-│   │   ├── events/
-│   │   │   └── indexer.ts      # Sui event listener
-│   │   └── routes/
-│   │       └── agent.ts        # REST API routes
-│   ├── package.json
-│   └── tsconfig.json
+├── indexer/                    # TypeScript Sui Event Indexer
+│   ├── index.ts                # Polls testnet events
+│   ├── handlers.ts             # Updates Supabase tables
+│   └── package.json
 │
-├── explorer/                   # ANIMA Explorer frontend (Joshua)
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── page.tsx        # Landing / search
-│   │   │   └── agent/[id]/     # Agent profile page
-│   │   ├── components/
-│   │   │   ├── AgentCard.tsx
-│   │   │   ├── ActionFeed.tsx
-│   │   │   ├── SkillBadge.tsx
-│   │   │   ├── WalletPanel.tsx
-│   │   │   └── KillSwitch.tsx
-│   │   └── lib/
-│   │       ├── sui.ts          # Sui client utils
-│   │       └── walrus.ts       # Walrus fetch utils
-│   ├── package.json
-│   └── next.config.js
+├── explorer/                   # Next.js Analytics & Management Console (Joshua)
+│   ├── app/
+│   │   ├── page.tsx            # Landing and agent search
+│   │   └── agents/[id]/        # Agent profile, actions, and kill switch dashboard
+│   ├── hooks/
+│   │   ├── useAgent.ts         # Syncs agent state from RPC
+│   │   └── useAgentActions.ts  # Syncs event feed from Supabase
+│   └── package.json
 │
 └── docs/
-    ├── README.md               # This file
-    ├── ARCHITECTURE.md         # Deep technical architecture
-    ├── DEMO_SCRIPT.md          # Step by step demo day script
-    └── SUBMISSION.md           # Hackathon submission write-up
+    ├── HOT_WALLET_GUIDE.md     # Setup and gas funding guide
+    ├── LITEPAPER.md            # Comprehensive project litepaper
+    └── Contracts-info.txt      # Deployment addresses and metadata
 ```
 
 ---
 
-## Team & Ownership
+## Hackathon Tracks and Focus Areas
 
-| Area                | Owner       | Responsibility                                                               |
-| ------------------- | ----------- | ---------------------------------------------------------------------------- |
-| Smart Contracts     | **Joshua**  | ANIMA Move object, OwnerCap, skill registry, wallet, events, PTB integration |
-| Explorer Frontend   | **Joshua**  | Next.js explorer, agent dashboard, kill switch UI, event feed                |
-| Backend & Execution | **Ademola** | PTB builder, DeepBook swap executor, Sui event indexer, REST API             |
-| Agent Runtime & ML  | **Ezekiel** | Price monitor, prediction model, agent orchestrator, Walrus skill management |
+### The Agentic Web Track
+ANIMA defines a standardized model for autonomous identity on-chain. Rather than relying on external web2 databases or API keys, the agent is a first-class shared object on Sui. The agent's identity, balances, active capabilities, and historical reputation metrics are natively visible to any other smart contract, enabling protocols to interact with autonomous entities with transparent, programmable risk limits.
 
----
+### Walrus Specialized Track
+ANIMA uses Walrus to store structured strategy weights, neural network parameters, and risk thresholds. By pinning these off-chain strategy configurations to Walrus and registering the resulting immutable Blob ID directly within the NFA’s on-chain dynamic fields, ANIMA guarantees that the agent’s logic cannot be tampered with. Anyone can verify the exact rules governing the agent's actions by querying Walrus.
 
-## Development Plan — 27 Days
-
-### Overview
-
-```
-Days  1– 7  │ Phase 1: Foundation    │ Setup, contracts scaffold, runtime scaffold
-Days  8–18  │ Phase 2: Core Build    │ Each person builds their core component
-Days 19–23  │ Phase 3: Integration   │ Connect everything end-to-end
-Days 24–27  │ Phase 4: Polish & Demo │ UI polish, demo script, submission write-up
-```
-
----
-
-### Phase 1: Foundation (Days 1–7)
-
-> Goal: Everyone has a working local environment and skeleton code. No blockers going into the core build.
-
-#### Joshua — Contracts
-
-- [x] Set up Sui Move project inside `/contracts` with `Move.toml`
-- [x] Scaffold the `ANIMA` struct with all fields (id, name, reputation_score, is_paused, wallet_balance)
-- [x] Scaffold the `OwnerCap` struct
-- [x] Write the `mint_anima` entry function — human calls this, receives OwnerCap
-- [x] Define all event structs in `events.move` (AgentActionExecuted, EmergencyHatchTriggered, ComputeSettled)
-- [ ] Deploy scaffold to Sui testnet and confirm object creation works
-- [ ] Share the deployed package ID with Ademola so he can start building against it
-
-#### Ezekiel — Agent Runtime
-
-- [ ] Set up Python project inside `/agent-runtime` with `requirements.txt`
-- [ ] Write a basic price monitor loop that polls a token price every 30 seconds (CoinGecko API or similar free feed)
-- [ ] Define the `skill_schema.json` — the JSON structure that will live on Walrus (skill name, trigger conditions, action type, parameters)
-- [ ] Set up Walrus client — write functions to upload a JSON blob and retrieve it by blob ID
-- [ ] Test a round trip: upload a skill config JSON to Walrus testnet, retrieve it, confirm integrity
-- [ ] Document the schema clearly so Joshua can store the blob ID in the contract's skill registry
-
-#### Ademola — Backend
-
-- [ ] Set up TypeScript project inside `/backend` with `package.json`
-- [ ] Install `@mysten/sui` SDK
-- [ ] Write a basic Sui client connection and confirm you can read object state from testnet
-- [ ] Set up a simple Express/Fastify REST API skeleton with a `/health` route
-- [ ] Research DeepBook V3 SDK — understand the swap interface before building against it
-- [ ] Set up a Sui event listener that subscribes to a package ID and logs events to console
-
----
-
-### Phase 2: Core Build (Days 8–18)
-
-> Goal: Every component works independently. Each person can demo their piece in isolation.
-
-#### Joshua — Contracts (Days 8–14)
-
-**Week focus: Complete the full contract with all functions**
-
-- [x] Implement `skill_registry.move` — dynamic field management
-  - `add_skill(anima, skill_name, walrus_blob_id)` — adds a skill to the registry
-  - `remove_skill(anima, skill_name, cap)` — removes a skill, requires OwnerCap
-  - `get_skill_blob_id(anima, skill_name)` — read-only, returns Walrus blob ID
-- [x] Implement `wallet.move` — sovereign wallet logic
-  - `deposit(anima, coin)` — anyone can deposit SUI into the agent wallet
-  - `agent_transfer(anima, amount, recipient)` — agent authorized spending (called by backend)
-  - `settle_compute(anima, amount, recipient)` — periodic compute cost settlement
-- [x] Implement emergency kill switch in `anima.move`
-  - `trigger_emergency_kill(anima, cap, ctx)` — pauses agent, drains wallet to sender
-  - Guard all spending functions with `assert!(!agent.is_paused, EAgentIsPaused)`
-- [x] Write Move tests in `/contracts/tests/` covering mint, deposit, kill switch, skill add/remove
-- [ ] Run `sui move test` — all tests must pass
-- [ ] Re-deploy updated contract to testnet, share new package ID
-
-**Joshua — Explorer (Days 12–18, parallel)**
-
-- [ ] Set up Next.js project inside `/explorer`
-- [ ] Build the search page — input an ANIMA object ID, fetch and display agent data
-- [ ] Build the agent profile page `/agent/[id]` showing:
-  - Agent name, reputation score, operational mode (Normal / PAUSED)
-  - Wallet balance
-  - Skill registry list with Walrus blob IDs
-  - Live action feed (events from the backend indexer)
-- [ ] Build the Kill Switch button component — calls `trigger_emergency_kill` via wallet adapter
-- [ ] Connect to Sui wallet (Sui Wallet or Slush) for the mint flow and kill switch
-
-#### Ezekiel — Agent Runtime (Days 8–18)
-
-**Week 1 focus (Days 8–12): Prediction engine**
-
-- [ ] Build `predictor.py` — a simple ML model that takes price history as input and outputs a BUY / HOLD / SELL signal
-  - Start simple: moving average crossover or a lightweight sklearn model
-  - The model does not need to be sophisticated — it needs to be demonstrably autonomous
-- [ ] Connect the price monitor output to the predictor input
-- [ ] Log decisions to console clearly: `[ANIMA] Price: $0.42 | Signal: BUY | Confidence: 78%`
-
-**Week 2 focus (Days 13–18): Orchestrator + Walrus**
-
-- [ ] Build `orchestrator.py` — the decision loop
-  - On startup: read ANIMA object from Sui, extract skill registry blob IDs
-  - Fetch skill config JSON from Walrus using blob IDs
-  - Load skill parameters (trigger price, action type, amount limits)
-  - Run the monitor + predictor loop
-  - When a trigger fires: call the backend API to execute the PTB
-- [ ] Implement Walrus skill update — when a skill is retrained, upload new weights to Walrus, return new blob ID for Joshua to update on-chain
-- [ ] Test the full off-chain loop: boot agent → fetch skills from Walrus → monitor price → trigger decision → call backend
-
-#### Ademola — Backend (Days 8–18)
-
-**Week 1 focus (Days 8–12): PTB executor**
-
-- [ ] Build `ptb/executor.ts` — the core PTB builder
-  - Takes: ANIMA object ID, action type, swap params
-  - Builds a PTB that:
-    1. Validates skill authorization against the ANIMA skill registry
-    2. Executes the swap/transfer
-    3. Emits the custom AgentActionExecuted
-  - Signs and submits the PTB to Sui testnet
-- [ ] Test PTB execution independently — confirm the transaction lands and the event is emitted
-
-**Week 2 focus (Days 13–18): DeepBook + Event Indexer**
-
-- [ ] Build `deepbook/swap.ts` — integrate DeepBook V3
-  - Connect to a DeepBook pool on testnet
-  - Execute a token swap using the agent wallet as the signer context
-  - Return the swap result to the PTB executor
-- [ ] Build `events/indexer.ts` — Sui event listener
-  - Subscribe to AgentActionExecuted from the ANIMA package
-  - Store events in memory (or a simple SQLite/JSON file for hackathon scope)
-  - Expose a REST endpoint `GET /agent/:id/events` that the explorer polls
-- [ ] Build `routes/agent.ts` — REST API routes
-  - `POST /agent/execute` — triggered by Ezekiel's orchestrator, builds and submits PTB
-  - `GET /agent/:id/events` — returns event history for the explorer
-  - `GET /agent/:id/status` — returns current ANIMA object state
-
----
-
-### Phase 3: Integration (Days 19–23)
-
-> Goal: The full demo loop works end-to-end, even if rough around the edges.
-
-This phase is the hardest. Everyone needs to be available and communicating daily.
-
-#### Day 19–20: Connect Runtime to Backend
-
-- Ezekiel's orchestrator calls `POST /agent/execute` on Ademola's backend
-- Confirm the signal from the ML engine triggers a real PTB submission
-- Debug any auth, serialization, or object ID issues
-
-#### Day 21: Connect Backend to Explorer
-
-- Explorer polls `GET /agent/:id/events` from Ademola's backend
-- Confirm events appear in the live action feed in real time after a PTB lands
-- Test the full visual loop: agent fires → PTB lands → explorer updates
-
-#### Day 22: Connect Walrus to Runtime
-
-- Ezekiel confirms the orchestrator boots correctly using a real Walrus blob ID from the ANIMA object's skill registry
-- Joshua updates the deployed ANIMA object with a real Walrus blob ID for a test skill
-- Confirm the agent fetches the correct skill config on startup
-
-#### Day 23: Full End-to-End Test
-
-- Run the complete demo loop from scratch as if it is demo day
-- Human mints ANIMA on the explorer → funds the agent wallet → agent boots → fetches Walrus skills → monitors price → fires PTB → explorer shows the event
-- Document every bug. Fix the critical ones. Log the rest.
-
----
-
-### Phase 4: Polish & Demo (Days 24–27)
-
-> Goal: The demo loop is bulletproof. The submission is complete. Everyone knows their part.
-
-#### Day 24: UI Polish (Joshua)
-
-- Explorer UI must look clean and intentional — not a default Next.js template
-- Agent profile page should feel like a real block explorer
-- Kill switch button should be visually prominent with a confirmation modal
-- Make sure the live event feed updates without a page refresh (polling or websocket)
-
-#### Day 25: Demo Script (Everyone)
-
-- Write `docs/DEMO_SCRIPT.md` — the exact step-by-step script for demo day
-- Assign who speaks for each part
-- Practice the demo at least twice as a team
-- Prepare answers for likely judge questions:
-  - _"What stops the agent from spending everything?"_ → Skill registry authorization + kill switch
-  - _"Why Sui specifically?"_ → PTBs, object model, parallel execution — this could only be built cleanly on Sui
-  - _"What's the real-world use case?"_ → DeFi protocols need accountable agents, DAOs need delegatable execution
-
-#### Day 26: Submission Write-Up (Joshua)
-
-- Write `docs/SUBMISSION.md` covering:
-  - Project summary (one paragraph)
-  - Problem and solution
-  - Technical architecture
-  - Sui-native integrations (PTBs, dynamic fields, events, Walrus)
-  - Team composition
-  - Demo video link
-  - Live deployment links (testnet)
-  - Roadmap
-
-#### Day 27: Buffer + Final Deploy
-
-- Re-deploy contracts to testnet one final time
-- Confirm explorer is live on Vercel
-- Confirm backend is live (Railway, Render, or similar)
-- Submit before the deadline with all links working
-- Record the demo video if not already done
+### University Award
+Developed as a research-driven protocol, ANIMA addresses the critical friction point between agentic autonomy and user security. By implementing an asymmetric human-in-the-loop guardianship structure using OwnerCap and Operator tokens, ANIMA provides a production-ready solution to prompt injection risks and shadow wallet vulnerabilities, demonstrating the utility of object capability models in academic AI security.
 
 ---
 
 ## Component Deep Dives
 
-### Contracts — Joshua
+### Sui Move Smart Contracts
 
-The ANIMA smart contract is the foundation everything else builds on. It must be deployed and stable before the integration phase.
+The contracts layer is designed to enforce maximum security, keeping the agent's sovereign vault isolated and delegating permissions via Move capability tokens:
 
-**Core Move Struct:**
+*   **[protocol.move](file:///C:/Users/PC/desktop/coding/anima-protocol/contracts/sources/protocol.move):** Defines the core `ANIMA` struct, representing the agent container. It is a shared object, allowing public deposits, while administrative paths require the presence of either an `OwnerCap` (held by the human guardian) or a `BackendCap` (held by the backend execution nodes).
+*   **[wallet.move](file:///C:/Users/PC/desktop/coding/anima-protocol/contracts/sources/wallet.move):** Contains [extract_funds_for_action](file:///C:/Users/PC/desktop/coding/anima-protocol/contracts/sources/wallet.move#L32-L56). This function asserts that the caller is the authorized operator address, verifies the agent is not paused, extracts a precise SUI coin resource, increments the agent's reputation score on-chain, and emits the action event.
+*   **[skill_registry.move](file:///C:/Users/PC/desktop/coding/anima-protocol/contracts/sources/skill_registry.move):** Leverages Sui's dynamic fields to add and remove authorized skills. Each skill binds a custom string key to a Walrus Blob ID, ensuring the agent's strategy config is anchored directly to the object.
 
-```move
-public struct ANIMA has key, store {
-    id: UID,
-    name: String,
-    reputation_score: u64,
-    is_paused: bool,
-    wallet_balance: Balance<SUI>,
-}
+### Agent Runtime Daemon
 
-public struct OwnerCap has key, store {
-    id: UID,
-    anima_id: ID,
-}
-```
+The off-chain brain is written in Python and operates as a service loop:
 
-**Key design decisions to understand:**
+*   **Initialization:** The daemon verifies the presence of an operator keypair in the home directory or generates one. It checks the balance of the operator hot wallet and, if low, requests a gas funding transaction of `0.05 SUI` from the client's active address.
+*   **Orchestration:** The orchestrator retrieves the dynamic skills registered on the NFA, fetches the strategy configuration from Walrus, and launches the analysis loop.
+*   **Execution:** When a decision signal is triggered, the daemon builds a PTB calling `extract_funds_for_action` signed by the operator key and submits it directly.
 
-The skill registry uses **dynamic fields** on the ANIMA object, not a vector inside the struct. This is intentional — dynamic fields allow skills to be added post-mint without touching the core struct. The key is the skill name (String), the value is the Walrus blob ID (String).
+### Backend and Execution Layer
 
-The wallet is a `Balance<SUI>` encapsulated inside the ANIMA struct. Only authorized Move functions can mutate it. The human cannot reach into the balance directly — only through the kill switch function which requires the OwnerCap.
+The backend coordinates off-chain RPC interactions and event streaming:
 
-**Emergency kill switch pattern:**
+*   **Transaction Relayer:** Provides helpers for wrapping complex execution steps into single, atomic Sui PTBs.
+*   **Event Listener:** Subscribes to the transaction stream of the ANIMA package ID on testnet. It detects `AnimaMinted` and `AgentActionExecuted` events, parses the JSON payload, and writes the telemetry data to the Supabase database.
 
-```move
-public fun trigger_emergency_kill(
-    agent: &mut ANIMA,
-    cap: &OwnerCap,
-    ctx: &mut TxContext
-) {
-    assert!(object::uid_to_inner(&agent.id) == cap.anima_id, EInvalidGuardianCertificate);
-    agent.is_paused = true;
-    let balance = balance::value(&agent.wallet_balance);
-    let funds = coin::take(&mut agent.wallet_balance, balance, ctx);
-    transfer::public_transfer(funds, tx_context::sender(ctx));
-    event::emit(EmergencyHatchTriggered { ... });
-}
-```
+### Next.js Explorer Console
+
+The user-facing portal provides real-time visualization of agent activity:
+
+*   **Agent Profiler:** Renders the agent's name, testnet object ID, live SUI balance, reputation score, and a list of authorized skills (each linking to its Walrus configuration).
+*   **Live Action Ledger:** Polls the database to show transaction history, allowing users to watch the agent execute trades and transfers in real-time.
+*   **Emergency Kill Switch:** Detects if the connected user's browser wallet holds the corresponding `OwnerCap` object. If present, it enables the override console to pause the agent and recover vault funds.
 
 ---
 
-### Agent Runtime — Ezekiel
+## Demonstration Sequence
 
-The agent runtime is the brain of ANIMA. It runs off-chain continuously, monitoring markets and making autonomous decisions.
-
-**Skill config JSON schema (stored on Walrus):**
-
-```json
-{
-  "skill_name": "token_price_monitor",
-  "version": "1.0",
-  "trigger": {
-    "type": "price_threshold",
-    "token": "SUI",
-    "condition": "below",
-    "value": 0.4
-  },
-  "action": {
-    "type": "swap",
-    "from_token": "USDC",
-    "to_token": "SUI",
-    "amount_percentage": 10
-  },
-  "risk_limits": {
-    "max_spend_per_action": 10,
-    "daily_spend_cap": 50
-  }
-}
-```
-
-**Orchestrator loop logic:**
-
-```
-1. Boot → read ANIMA object ID from env
-2. Fetch ANIMA object from Sui → extract skill blob IDs from dynamic fields
-3. For each blob ID → fetch skill config JSON from Walrus
-4. Start price monitor loop
-5. On each tick → run predictor → check against skill trigger conditions
-6. If trigger fires → validate against risk limits → POST to backend /agent/execute
-7. Log result → update local state → continue loop
-```
-
-**Key constraint for Ezekiel:** The ML model does not need to be accurate. It needs to be demonstrably autonomous. A simple moving average crossover that fires reliably on testnet is better than a sophisticated model that never triggers during the demo.
+1.  **Mint NFA:** The human guardian opens the Explorer Console, enters an agent name, sets the local operator address, and inputs the Walrus config Blob ID. They sign the transaction to mint the NFA.
+2.  **Fund Vault:** The human deposits SUI directly into the newly minted agent's balance vault. The explorer updates the live balance display.
+3.  **Boot Runtime:** The off-chain Python daemon is started. It loads the NFA object, fetches the strategy config from Walrus, verifies that the hot wallet has gas, and starts monitoring.
+4.  **Execute Strategy:** When a trigger is hit, the daemon builds an atomic PTB, calls `extract_funds_for_action` using the operator key, and sends SUI to a designated recipient on-chain.
+5.  **Telemetry Indexing:** The indexer captures the `AgentActionExecuted` event, writes it to the database, and increments the agent's reputation score.
+6.  **Real-Time Analytics:** The explorer action ledger updates, showing the transaction hash, SUI amount, and updated reputation.
+7.  **Emergency Stop:** The guardian clicks the pause button. The wallet signs the transaction with the `OwnerCap`. The NFA state is updated to paused, and all SUI is flushed back to the human's wallet, rendering the operator key useless.
 
 ---
 
-### Backend — Ademola
+## Demonstration Day Checklist
 
-The backend is the execution bridge between the off-chain runtime and the on-chain contracts.
-
-**PTB structure for atomic swap + event:**
-
-```typescript
-const tx = new Transaction();
-
-// Step 1: Validate skill authorization against ANIMA object
-const [skillAuth] = tx.moveCall({
-  target: `${PACKAGE_ID}::anima::verify_skill_auth`,
-  arguments: [tx.object(animaObjectId), tx.pure(skillName)],
-});
-
-// Step 2: Execute swap on DeepBook
-const [swapResult] = tx.moveCall({
-  target: `${DEEPBOOK_PACKAGE}::pool::swap`,
-  arguments: [...swapParams],
-});
-
-// Step 3: Emit ANIMA action event (this is what the explorer reads)
-tx.moveCall({
-  target: `${PACKAGE_ID}::events::emit_action`,
-  arguments: [tx.object(animaObjectId), swapResult],
-});
-
-const result = await client.signAndExecuteTransaction({
-  transaction: tx,
-  signer,
-});
-```
-
-**Key constraint for Ademola:** The PTB must be atomic. If the DeepBook swap fails, the event must not be emitted. This is guaranteed by Sui's PTB design — if any step fails the entire block rolls back. Test this failure case explicitly.
+*   **Core Minting:** Minting an NFA successfully instantiates a shared object on Sui Testnet and transfers OwnerCap/BackendCap to the creator.
+*   **Walrus Integration:** The runtime fetches the strategy config from the Walrus Blob network using the ID pinned on the NFA.
+*   **Operator Gas Seeding:** The startup script checks if the operator hot wallet has SUI and automatically transfers gas from the active client account.
+*   **Atomic PTB execution:** Fund extraction, execution, reputation increment, and event emission are executed within a single block.
+*   **Real-time Event Indexing:** Transaction events appear in the explorer ledger shortly after block confirmation.
+*   **Guardianship Pause:** The kill switch pauses agent transactions on-chain and recovers remaining funds.
 
 ---
 
-### Explorer — Joshua
+## Screenshots and Console Telemetry
 
-The ANIMA Explorer is the product surface that makes everything visible to judges and users.
+### Agent Minting Interface
+`![Agent Minting Interface](docs/screenshots/minting_interface.png)`
+The interactive minting dashboard where users can instantiate an NFA by entering its name, bound operator public address, and initial Walrus strategy Blob ID.
 
-**Key pages:**
+### Explorer Sovereign Agent Profile
+`![Agent Profile Dashboard](docs/screenshots/agent_profile.png)`
+The detailed agent block explorer showing the live operational mode, reputation score, SUI balance, active dynamic skills registry, and historical action feeds.
 
-`/` — Search page. Input an ANIMA object ID or agent name. Display a preview card.
+### Emergency Override Console
+`![Emergency Override Interface](docs/screenshots/emergency_kill.png)`
+The guardian's command dashboard where the OwnerCap can be connected to instantly trigger the emergency kill switch, pausing the NFA and extracting all vault funds.
 
-`/agent/[id]` — Agent profile. The main view. Shows:
-
-- Agent name and status badge (ACTIVE / PAUSED)
-- Reputation score with a visual indicator
-- Wallet balance (live, polled every 10 seconds)
-- Skill registry — list of skills with their Walrus blob IDs
-- Live action feed — every PTB event emitted by this agent, newest first
-- Kill Switch button (only enabled if the connected wallet holds the OwnerCap)
-
-**Live event feed implementation:**
-The explorer polls `GET /agent/:id/events` from Ademola's backend every 5 seconds. When a new event arrives, it animates into the top of the feed. This creates the "watching an agent trade live" experience that wins demo day.
+### Agent Runtime Terminal Daemon
+`![Agent Runtime CLI](docs/screenshots/runtime_cli.png)`
+The Ezekiel Python runtime console displaying real-time model price feeds, strategy execution ticks, hot-wallet gas checks, auto-seeding events, and successful Sui Testnet PTB execution logs.
 
 ---
 
-## Demo Loop
+## Meet the Team
 
-The complete end-to-end demonstration sequence for judges:
-
-```
-1. Open the ANIMA platform
-   → Human fills in agent name and skill parameters
-   → Clicks "Mint ANIMA"
-   → Wallet signs the transaction
-   → ANIMA object created on Sui testnet
-   → Human receives OwnerCap in their wallet
-
-2. Fund the agent
-   → Human sends SUI to the agent's sovereign wallet address
-   → Explorer shows wallet balance update
-
-3. Agent boots
-   → Ezekiel's orchestrator reads ANIMA object from Sui
-   → Fetches skill config JSON from Walrus via blob ID
-   → Begins price monitoring loop
-
-4. Agent pays for data feed
-   → Backend settles a small compute cost on-chain
-   → ComputeSettled event emitted and visible in explorer
-
-5. Price trigger fires
-   → Token price crosses the threshold defined in the skill config
-   → Orchestrator calls POST /agent/execute on the backend
-
-6. PTB executes atomically
-   → Skill authorization validated
-   → Swap executes on DeepBook
-   → AgentActionExecuted emitted in the same transaction
-
-7. Explorer updates live
-   → New action appears at the top of the live feed
-   → Wallet balance reflects the swap
-   → Reputation score increments
-
-8. Kill switch demo
-   → Human clicks KILL SWITCH on the explorer
-   → Confirmation modal appears
-   → Human signs with OwnerCap wallet
-   → Agent is paused
-   → All remaining SUI drains back to human wallet
-   → Explorer shows PAUSED status
-```
+*   **Joshua:** Lead Smart Contract Engineer and Frontend Developer. Responsible for designing the core Move contracts (ANIMA, OwnerCap, BackendCap), building the dynamic skill registry, implementing on-chain transaction execution, and developing the Next.js Explorer Console.
+*   **Ademola:** Backend Architect and Integration Engineer. Designed the transaction relayer API, constructed the atomic Programmable Transaction Blocks, integrated the DeepBook V3 swap execution path, and built the real-time Sui event indexer and data synchronization services.
+*   **Ezekiel:** Machine Learning Engineer and Agent Runtime Architect. Created the off-chain Python agent runtime daemon, built the price prediction models, implemented the Walrus decentralized storage client, and designed the local hot-wallet operator key derivation and gas auto-seeding engine.
 
 ---
 
-## Demo Day Checklist
+## Technology Stack
 
-| Priority | Component            | Pass Condition                                                    |
-| -------- | -------------------- | ----------------------------------------------------------------- |
-| Critical | ANIMA Mint           | Human mints → receives OwnerCap → object visible on explorer      |
-| Critical | Walrus Skill Fetch   | Agent boots → fetches skill JSON from Walrus → logs skill config  |
-| Critical | PTB Atomic Execution | Price trigger → swap on DeepBook + event emitted in same tx       |
-| Critical | Explorer Live Feed   | Event appears in explorer within 10 seconds of block confirmation |
-| High     | Kill Switch          | Click → agent paused → funds drained to human wallet              |
-| High     | Reputation Score     | Score increments after each successful agent action               |
-| Medium   | Compute Settlement   | Backend logs compute cost → settles on-chain as SUI transfer      |
-| Roadmap  | x402 Framing         | Mention in presentation as next evolution of the payment layer    |
+*   **Smart Contracts:** Sui Move
+*   **Execution Model:** Sui Programmable Transaction Blocks (PTBs)
+*   **Sovereign Storage:** Walrus Blob Network
+*   **Off-chain Daemon:** Python 3.11
+*   **Data Models:** scikit-learn
+*   **Explorer Frontend:** Next.js 14, TypeScript, Tailwind CSS, Lucide
+*   **Indexer Database:** Supabase, PostgreSQL
+*   **RPC Node Provider:** Sui Testnet Fullnodes
 
 ---
 
-## Tech Stack
+## Roadmap Beyond the Hackathon
 
-| Layer            | Technology                                 |
-| ---------------- | ------------------------------------------ |
-| Smart Contracts  | Sui Move                                   |
-| Atomic Execution | Sui Programmable Transaction Blocks (PTBs) |
-| On-chain Events  | Sui Event System                           |
-| Skill Storage    | Walrus (Sui)                               |
-| On-chain Swaps   | DeepBook V3                                |
-| Agent Runtime    | Python 3.11+                               |
-| ML Model         | scikit-learn / custom                      |
-| Backend          | TypeScript, Node.js                        |
-| Sui SDK          | @mysten/sui                                |
-| Explorer         | Next.js 14, TypeScript, Tailwind CSS       |
-| Deployment       | Vercel (explorer), Railway (backend)       |
+### V1: Hackathon Core (Completed)
+Human-controlled NFA creation, programmatic hot-wallet gas seeding, dynamic Walrus skill authorization, real-time indexer synchronization, and guardian emergency overrides.
 
----
+### V2: The Composable Agent Marketplace
+*   **Multi-Skill Registries:** Support for agents combining multiple, independent Walrus configs.
+*   **DeFi Trust Gating:** Enabling DeFi protocols to query an NFA's reputation score on-chain to apply dynamic borrowing rates or leverage caps.
+*   **Skill Marketplace:** A platform where developers can sell pre-compiled, audited strategy configs (Walrus Blob IDs) directly to NFA owners.
 
-## Roadmap Beyond Hackathon
-
-**V1 — Hackathon (Current)**
-Human-created NFAs. One complete autonomous loop. Agent explorer live.
-
-**V2 — Post Hackathon**
-
-- Multi-skill agents with composable skill registries
-- Agent-to-agent interactions and capability delegation
-- Reputation scoring used by DeFi protocols for agent trust gating
-- Developer SDK — `anima-sdk` for building on the NFA standard
-- Agent marketplace — browse and deploy community-built agents
-
-**V3 — INFAs (Intelligent Non-Fungible Agents)**
-Agents that mint their own NFAs without human intervention. Agents spawning child agents with delegated capabilities. A fully autonomous agent economy where agents are economic actors in their own right.
-
----
-
-_Sui Overflow 2026 — Agentic Web Track + Walrus Specialized Track + University Award_
-_Team: Joshua · Ademola · Ezekiel_
+### V3: Sovereign Machine Economies
+*   **Self-Minting Agents:** Upgrading agents with capabilities to programmatically mint new sub-NFAs to delegate work.
+*   **Inter-Agent Contracts:** Enabling NFAs to contract work to other NFAs on-chain, paying in SUI from their sovereign vaults, creating decentralized agent organizations.
