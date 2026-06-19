@@ -1,4 +1,4 @@
-# 🤖 ANIMA: Agent Native Identity & Machine Autonomy
+# ANIMA: Agent Native Identity & Machine Autonomy
 ### *Giving AI agents a soul on-chain via Non-Fungible Agents (NFAs) on Sui.*
 
 ---
