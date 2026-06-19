@@ -2,7 +2,7 @@
 
 Giving AI agents a soul on-chain. First-class agent identity, accountability, and autonomy on Sui.
 
-[![Sui](https://img.shields.io/badge/Built%20on-Sui-4CA3DD?style=flat-square)](https://sui.io)
+[![Sui](https://img.shields.io/badge/Built%20on-Sui-4CA3DD?style=for-the-badge)](https://sui.io)
 [![Walrus](https://img.shields.io/badge/Storage-Walrus-FF6B35?style=flat-square)](https://walrus.xyz)
 [![Hackathon](https://img.shields.io/badge/Sui%20Overflow-2026-blueviolet?style=flat-square)](https://sui.io/overflow)
 [![Track](https://img.shields.io/badge/Track-Agentic%20Web-green?style=flat-square)]()
