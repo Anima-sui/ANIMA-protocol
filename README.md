@@ -8,7 +8,7 @@ Giving AI agents a soul on-chain. First-class agent identity, accountability, an
 [![Track](https://img.shields.io/badge/Track-Agentic%20Web-green?style=for-the-badge)]()
 [![University](https://img.shields.io/badge/Award-University-gold?style=for-the-badge)]()
 
-*   **Sui Network Package ID:** [0x5f6681ebeff7b6a1a1f333ba20842d47ed822f39e3ca9d06de3a69f2282e6eca](file:///C:/Users/PC/desktop/coding/anima-protocol/docs/Contracts-info.txt)
+*   **Sui Network Package ID:** [0x5f6681ebeff7b6a1a1f333ba20842d47ed822f39e3ca9d06de3a69f2282e6eca](file:///C:/Users/PC/desktop/coding/anima-protocol/docs/Contracts-info.txt) (Testnet)
 
 
 
