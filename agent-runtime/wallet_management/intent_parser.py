@@ -54,6 +54,7 @@ Schema Description:
   - Use "unknown" if the request is not related to wallet tasks or is not understood.
 - "parameters": object containing:
   - "recipients": list of strings (Sui address strings, empty if none).
+  - "amount": number (specific absolute SUI amount to transfer or distribute, null if not specified).
   - "working_percent": number (percentage of balance to use, default 100).
   - "reserve_percent": number (percentage of working balance to keep, default 0).
   - "split_count": integer (number of wallets to split remaining across, default 1).
@@ -64,6 +65,7 @@ Example output for a balance check:
   "action": "balance",
   "parameters": {
     "recipients": [],
+    "amount": null,
     "working_percent": 100.0,
     "reserve_percent": 0.0,
     "split_count": 1

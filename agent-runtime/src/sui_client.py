@@ -31,7 +31,7 @@ class SuiRPCClient:
         """
         self.rpc_url = rpc_url or os.getenv(
             "SUI_RPC_URL", 
-            "https://testnet-rpc.sui.io"
+            "https://fullnode.testnet.sui.io:443"
         )
         self.session: Optional[aiohttp.ClientSession] = None
         
@@ -109,7 +109,7 @@ class SuiRPCClient:
         try:
             logger.info(f"📥 Fetching ANIMA object: {object_id}")
             
-            result = self._make_rpc_request("sui_getObject", [object_id])
+            result = self._make_rpc_request("sui_getObject", [object_id, {"showContent": True}])
             
             if result:
                 logger.info(f"✓ ANIMA object fetched successfully")

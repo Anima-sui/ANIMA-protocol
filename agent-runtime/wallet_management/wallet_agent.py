@@ -201,11 +201,16 @@ class WalletAgent:
             tuple: (working_sui, reserve_sui, split_pool_sui, per_recipient_sui)
         """
         params = plan.get("parameters", {})
+        specific_amount = params.get("amount")
         working_pct = params.get("working_percent", 100.0)
         reserve_pct = params.get("reserve_percent", 0.0)
         split_count = params.get("split_count", 1)
 
-        working_sui = balance_sui * (working_pct / 100.0)
+        if specific_amount is not None and specific_amount > 0:
+            working_sui = float(specific_amount)
+        else:
+            working_sui = balance_sui * (working_pct / 100.0)
+            
         reserve_sui = working_sui * (reserve_pct / 100.0)
         split_pool_sui = working_sui - reserve_sui
         

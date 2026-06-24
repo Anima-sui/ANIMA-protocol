@@ -64,8 +64,10 @@ class KeyManager:
         private_hex = private_bytes.hex()
         public_hex = public_bytes.hex()
         
-        # Generate operator address (public key hex prefixed with 0x)
-        operator_address = f"0x{public_hex}"
+        # Generate operator address (Sui address is Blake2b hash of flag || public key)
+        import hashlib
+        flag_and_pub = b'\x00' + public_bytes
+        operator_address = f"0x{hashlib.blake2b(flag_and_pub, digest_size=32).hexdigest()}"
         
         logger.info(f"✓ Keypair generated successfully")
         logger.info(f"  Public Address: {operator_address}")
