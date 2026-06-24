@@ -250,20 +250,16 @@ The user-facing portal provides real-time visualization of agent activity:
 ## Screenshots and Console Telemetry
 
 ### Agent Minting Interface
-`![Agent Minting Interface](docs/screenshots/minting_interface.png)`
+![Agent Minting Interface](docs/screenshots/minting_interface.png)
 The interactive minting dashboard where users can instantiate an NFA by entering its name, bound operator public address, and initial Walrus strategy Blob ID.
 
 ### Explorer Sovereign Agent Profile
-`![Agent Profile Dashboard](docs/screenshots/agent_profile.png)`
+![Agent Profile Dashboard](docs/screenshots/agent_profile.png)
 The detailed agent block explorer showing the live operational mode, reputation score, SUI balance, active dynamic skills registry, and historical action feeds.
 
 ### Emergency Override Console
-`![Emergency Override Interface](docs/screenshots/emergency_kill.png)`
+![Emergency Override Interface](docs/screenshots/emergency_kill.png)
 The guardian's command dashboard where the OwnerCap can be connected to instantly trigger the emergency kill switch, pausing the NFA and extracting all vault funds.
-
-### Agent Runtime Terminal Daemon
-`![Agent Runtime CLI](docs/screenshots/runtime_cli.png)`
-The Ezekiel Python runtime console displaying real-time model price feeds, strategy execution ticks, hot-wallet gas checks, auto-seeding events, and successful Sui Testnet PTB execution logs.
 
 ---
 
