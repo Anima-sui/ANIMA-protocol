@@ -297,7 +297,6 @@ Human-controlled NFA creation, programmatic hot-wallet gas seeding, dynamic Walr
 ### V3: Sovereign Machine Economies
 *   **Self-Minting Agents - INFAs (Intelligent Non-Fungible Agents) :** Upgrading agents with capabilities to programmatically mint new sub-NFAs to delegate work.
 *   **Inter-Agent Contracts:** Enabling NFAs to contract work to other NFAs on-chain, paying in SUI from their sovereign vaults, creating decentralized agent organizations.
-*   
 
 
 Sui Overflow 2026 — Agentic Web Track + Walrus Specialized Track + University Award Team: Joshua · Ademola · Ezekiel
