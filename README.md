@@ -160,7 +160,7 @@ anima-protocol/
 │   ├── tests/                  # Contract unit tests
 │   └── Move.toml
 │
-├── agent-runtime/              # Off-chain Python Daemon (Ezekiel)
+├── agent-runtime/              # Off-chain Python Daemon 
 │   ├── src/
 │   │   ├── orchestrator.py     # Decision engine and PTB builder
 │   │   └── walrus_client.py    # Walrus retrieval implementation
@@ -172,7 +172,7 @@ anima-protocol/
 │   ├── handlers.ts             # Updates Supabase tables
 │   └── package.json
 │
-├── explorer/                   # Next.js Analytics & Management Console (Joshua)
+├── explorer/                   # Next.js Analytics & Management Console
 │   ├── app/
 │   │   ├── page.tsx            # Landing and agent search
 │   │   └── agents/[id]/        # Agent profile, actions, and kill switch dashboard
